@@ -6,23 +6,19 @@ import { login, checkUserStatus, startAbilityTest } from "../../utils/api";
 const LoginPage = () => {
   const navigate = useNavigate();
 
-  // Modal & Loading state
   const [showGuideModal, setShowGuideModal] = useState(false);
-  const [isGeneratingSoal, setIsGeneratingSoal] = useState(false); // State baru untuk loading AI
+  const [isGeneratingSoal, setIsGeneratingSoal] = useState(false);
 
-  // Form state Login
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  // Message state
   const [message, setMessage] = useState({
     text: "",
     type: "",
   });
 
-  // Handle input
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -30,41 +26,33 @@ const LoginPage = () => {
     });
   };
 
-  // 1. Helper function: HANYA CEK STATUS (Proses Sangat Cepat)
   const checkIfNeedsAbilityTest = async () => {
     try {
-      // Memanggil endpoint GET yang ringan, BUKAN menembak AI
       await checkUserStatus();
-      return true; // Jika berhasil (201), berarti dia user baru
+      return true;
     } catch (error) {
       if (error.message.includes("sudah pernah") || error.message.includes("403")) {
-        return false; // Jika ditolak karena sudah pernah tes
+        return false;
       }
-      throw error; 
+      throw error;
     }
   };
 
-  // 2. Fungsi Utama Login
   const handleLogin = async (e) => {
     e.preventDefault();
     const { email, password } = formData;
 
     try {
       setMessage({ text: "Memproses...", type: "alert" });
-
-      // Eksekusi Login
       await login({ email, password });
-
-      // Cek status kewajiban tes (Langsung responsif!)
       const needsAbilityTest = await checkIfNeedsAbilityTest();
 
       if (needsAbilityTest) {
-        setShowGuideModal(true); // Modal langsung muncul tanpa nunggu AI
+        setShowGuideModal(true);
       } else {
         setMessage({ text: "Login berhasil", type: "success" });
         navigate("/home");
       }
-
     } catch (err) {
       setMessage({
         text: err.message || "Login gagal, periksa kembali email dan kata sandimu.",
@@ -73,21 +61,14 @@ const LoginPage = () => {
     }
   };
 
-  // 3. Modal lanjut: PROSES AI BERADA DI SINI
   const handleNextToTestAbility = async () => {
     try {
-      setIsGeneratingSoal(true); // Ubah tombol jadi "AI sedang menyiapkan..."
-
-      // Memanggil endpoint POST yang menembak T5 (butuh waktu beberapa detik)
-      const testResponse = await startAbilityTest(); 
-      
-      setShowGuideModal(false); 
-      
-      // Bawa data soal yang berhasil di-generate ke halaman ujian
-      navigate("/test-kemampuan-awal", { 
-        state: { testData: testResponse.data } 
+      setIsGeneratingSoal(true);
+      const testResponse = await startAbilityTest();
+      setShowGuideModal(false);
+      navigate("/test-kemampuan-awal", {
+        state: { testData: testResponse.data },
       });
-      
     } catch (err) {
       alert("Gagal menyiapkan soal ujian: " + err.message);
     } finally {
@@ -98,26 +79,21 @@ const LoginPage = () => {
   return (
     <div className="login-wrapper">
       <div className="auth-card-wrapper">
-        {/* Header */}
         <div className="login-header">
           <img src={logoIcon} alt="Apta Logo" className="login-logo-img" />
         </div>
 
-        {/* Content */}
         <div className="login-content">
           <h1 className="login-title font-lobster">Login</h1>
 
           <div className="login-card-light">
-            {/* Message */}
             {message.text && (
               <div className={`register-message ${message.type}`}>
                 {message.text}
               </div>
             )}
 
-            {/* Form */}
             <form onSubmit={handleLogin}>
-              {/* Email */}
               <div className="input-group">
                 <label>Masukkan Email</label>
                 <input
@@ -130,7 +106,6 @@ const LoginPage = () => {
                 />
               </div>
 
-              {/* Password */}
               <div className="input-group">
                 <label>Masukkan Kata Sandi</label>
                 <input
@@ -143,19 +118,17 @@ const LoginPage = () => {
                 />
               </div>
 
-              {/* Button */}
               <button type="submit" className="btn-login-black">
                 Masuk
               </button>
             </form>
 
-            {/* Footer */}
             <div className="signup-footer">
               <p>
                 Belum punya akun?{" "}
                 <span
                   onClick={() => navigate("/register")}
-                  style={{ color: "blue", cursor: "pointer" }}
+                  className="reg-link-style"
                 >
                   Daftar sekarang
                 </span>
@@ -165,13 +138,11 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Modal */}
       {showGuideModal && (
-        <div style={styles.overlay}>
-          <div style={styles.modalCard}>
-            <h2 style={styles.modalTitle}>Petunjuk Ability Test</h2>
-
-            <p style={styles.modalText}>
+        <div className="login-modal-overlay">
+          <div className="login-modal-card">
+            <h2 className="login-modal-title">Petunjuk Ability Test</h2>
+            <p className="login-modal-text">
               Sebelum masuk ke aplikasi utama, Anda diwajibkan mengikuti
               <strong> Tes Kemampuan Awal </strong>
               terlebih dahulu.
@@ -179,13 +150,8 @@ const LoginPage = () => {
 
             <button
               onClick={handleNextToTestAbility}
-              className="btn-register-black"
-              disabled={isGeneratingSoal} // Matikan tombol saat nunggu AI
-              style={{ 
-                marginTop: "16px", 
-                opacity: isGeneratingSoal ? 0.7 : 1, 
-                cursor: isGeneratingSoal ? "wait" : "pointer" 
-              }}
+              className="btn-register-black login-modal-btn"
+              disabled={isGeneratingSoal}
             >
               {isGeneratingSoal ? "AI Sedang Menyiapkan Tes..." : "Mulai Sekarang"}
             </button>
@@ -194,43 +160,6 @@ const LoginPage = () => {
       )}
     </div>
   );
-};
-
-// Styles
-const styles = {
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 9999,
-    padding: "20px",
-  },
-  modalCard: {
-    background: "#fff",
-    padding: "32px",
-    borderRadius: "14px",
-    maxWidth: "450px",
-    width: "100%",
-    textAlign: "center",
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-  },
-  modalTitle: {
-    margin: 0,
-    fontSize: "22px",
-    fontWeight: "700",
-  },
-  modalText: {
-    fontSize: "15px",
-    lineHeight: "1.6",
-  },
 };
 
 export default LoginPage;

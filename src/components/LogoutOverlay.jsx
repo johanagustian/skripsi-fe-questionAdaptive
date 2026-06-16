@@ -24,12 +24,19 @@ const Navbar = () => {
         
         // Jika backend-mu nantinya mengirimkan konversi level dari Theta, tangkap di sini.
         // Sementara kita beri default "Middle" jika field belum ada.
-        const level = result?.data?.userData?.level 
-                 || result?.data?.level 
-                 || "Middle";
+        const theta_score = result?.data?.userData?.theta_score 
+                 || result?.data?.theta_score
+                 || "-"; 
 
+        const formatTheta = theta_score.toFixed(2);
         setUserName(name);
-        setUserLevel(`Level: ${level}`);
+
+        if (formatTheta >= 0.5){
+          setUserLevel(`Level: Hight (${formatTheta})`);
+        } else{
+          setUserLevel(`Level: Middle (${formatTheta})`);
+        }
+        
       } catch (error) {
         console.error("Gagal memuat data profil navbar:", error);
         setUserName("Guest");

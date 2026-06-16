@@ -9,9 +9,10 @@ const AbilityTestPage = () => {
 
   // Menangkap data dari navigasi LoginPage
   const testData = location.state?.testData;
+  console.log("Data tes yang diterima:", testData);
   const questions = testData?.questions || [];
   const sessionId = testData?.session_id;
-  const readingContext = testData?.context || "Teks bacaan tidak tersedia.";
+  // const readingContext = testData?.questions.reading_context || "Teks bacaan tidak tersedia.";
 
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [answers, setAnswers] = useState({});
@@ -30,7 +31,9 @@ const AbilityTestPage = () => {
 
   if (!testData || questions.length === 0) return <div>Memuat soal...</div>;
 
+  const currentReadingContext = questions[currentQuestion - 1]?.reading_context;
   const currentQuiz = questions[currentQuestion - 1];
+  const readingContext = currentQuiz?.reading_context || "Teks bacaan tidak tersedia.";
   const totalAnswered = Object.keys(answers).length;
   const isAllQuestionsAnswered = totalAnswered === questions.length;
 
@@ -83,8 +86,7 @@ const AbilityTestPage = () => {
         <div className="qz-main-content">
           <article className="qz-context-card">
             <div className="at-card-badge">
-              Soal Nomor: {currentQuestion} | Tingkat:{" "}
-              {currentQuiz.difficulty.toUpperCase()}
+              Level : {currentQuiz.difficulty.toUpperCase()}
             </div>
             <h2 className="qz-context-title">English Reading Comprehension</h2>
 
