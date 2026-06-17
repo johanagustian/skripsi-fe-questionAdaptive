@@ -7,31 +7,26 @@ const AbilityTestPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Menangkap data dari navigasi LoginPage
   const testData = location.state?.testData;
   console.log("Data tes yang diterima:", testData);
   const questions = testData?.questions || [];
   const sessionId = testData?.session_id;
-  // const readingContext = testData?.questions.reading_context || "Teks bacaan tidak tersedia.";
 
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [answers, setAnswers] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // State untuk Modal Hasil
   const [showResultModal, setShowResultModal] = useState(false);
   const [resultData, setResultData] = useState(null);
 
-  // Cek jika halaman diakses langsung tanpa lewat login
   useEffect(() => {
     if (!testData || questions.length === 0) {
       navigate("/login");
     }
   }, [testData, questions.length, navigate]);
 
-  if (!testData || questions.length === 0) return <div>Memuat soal...</div>;
+  if (!testData || questions.length === 0) return <div className="p-10 text-center">Memuat soal...</div>;
 
-  const currentReadingContext = questions[currentQuestion - 1]?.reading_context;
   const currentQuiz = questions[currentQuestion - 1];
   const readingContext = currentQuiz?.reading_context || "Teks bacaan tidak tersedia.";
   const totalAnswered = Object.keys(answers).length;
@@ -44,16 +39,13 @@ const AbilityTestPage = () => {
   const isNextDisabled =
     currentQuestion === questions.length && !isAllQuestionsAnswered;
 
-  // Fungsi Submit Jawaban ke Backend
   const handleSubmit = async () => {
     setIsSubmitting(true);
-
-    // Konversi UI (0, 1, 2, 3) ke format Backend (A, B, C, D)
     const indexToLetter = { 0: "A", 1: "B", 2: "C", 3: "D" };
 
     const formattedAnswers = questions.map((q, idx) => ({
       question_id: q.item_id,
-      user_answer: indexToLetter[answers[idx + 1]], // idx + 1 karena currentQuestion dimulai dari 1
+      user_answer: indexToLetter[answers[idx + 1]],
     }));
 
     try {
@@ -64,7 +56,7 @@ const AbilityTestPage = () => {
 
       if (response.status === "success") {
         setResultData(response.data);
-        setShowResultModal(true); // Munculkan pop-up hasil
+        setShowResultModal(true);
       }
     } catch (error) {
       alert("Gagal mengirim jawaban: " + error.message);
@@ -73,7 +65,6 @@ const AbilityTestPage = () => {
     }
   };
 
-  // Parsing options dengan aman (jaga-jaga jika backend mengirim string JSON)
   const currentOptions =
     typeof currentQuiz.options === "string"
       ? JSON.parse(currentQuiz.options)
@@ -85,50 +76,49 @@ const AbilityTestPage = () => {
         {/* Konten Kiri (Teks Bacaan & Soal) */}
         <div className="qz-main-content">
           <article className="qz-context-card">
-            <div className="at-card-badge">
-              Level : {currentQuiz.difficulty.toUpperCase()}
+            
+            {/* 1. KOTAK BADGE LEVEL DAN JUDUL YANG SUDAH DISAMAKAN DENNGAN QUIZ */}
+            <div className="qz-header-row">
+              <h2 className="qz-context-title" style={{ margin: 0 }}>
+                English Reading Comprehension
+              </h2>
+              <span className="qz-difficulty-badge">
+                Level : {currentQuiz.difficulty.toUpperCase()}
+              </span>
             </div>
-            <h2 className="qz-context-title">English Reading Comprehension</h2>
 
-            <div
-              className="qz-context-body"
-              style={{
-                maxHeight: "250px",
-                overflowY: "auto",
-                paddingRight: "10px",
-              }}
-            >
-              <p className="at-note-text" style={{ marginBottom: "16px" }}>
+            <div className="qz-context-body">
+              <p className="at-note-text" style={{ marginBottom: "16px", fontStyle: "italic", fontSize: "13px", color: "#64748b" }}>
                 * <b>Instruksi:</b> Bacalah teks di bawah ini. Anda bebas
-                melompati nomor soal, namun{" "}
-                <b>seluruh {questions.length} soal wajib dijawab</b> untuk
-                menyelesaikan tes.
+                melompati nomor soal, namun <b>seluruh {questions.length} soal wajib dijawab</b> untuk menyelesaikan tes.
               </p>
-              <div className="context-reading-text">
-                {readingContext.split("\n").map((paragraph, index) => {
-                  if (paragraph.trim() === "") return null;
-                  return (
-                    <p
-                      key={index}
-                      style={{
-                        marginBottom: "12px",
-                        lineHeight: "1.6",
-                        textAlign: "justify",
-                      }}
-                    >
-                      {paragraph}
-                    </p>
-                  );
-                })}
+
+              {/* 2. MENGGUNAKAN qz-reading-box AGAR LATAR BELAKANG ABU-ABU DAN BORDER BIRU MUNCUL KONSISTEN */}
+              <div className="qz-reading-box at-context-body-scroll">
+                <div className="context-reading-text">
+                  {readingContext.split("\n").map((paragraph, index) => {
+                    if (paragraph.trim() === "") return null;
+                    return (
+                      <p
+                        key={index}
+                        style={{
+                          margin: 0,
+                          marginBottom: "12px",
+                          lineHeight: "1.6",
+                          textAlign: "justify",
+                        }}
+                      >
+                        {paragraph}
+                      </p>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </article>
 
           <section className="qz-question-section">
-            <p
-              className="qz-question-text"
-              style={{ fontWeight: "600", marginBottom: "20px" }}
-            >
+            <p className="qz-question-text at-question-text-bold">
               {currentQuiz.question_text}
             </p>
             <div className="qz-options-list">
@@ -140,9 +130,13 @@ const AbilityTestPage = () => {
                     onClick={() => handleSelectOption(index)}
                     className={`qz-option-item at-option-clickable ${isSelected ? "active" : ""}`}
                   >
-                    <div
-                      className={`qz-radio-circle ${isSelected ? "active" : ""}`}
+                    <input 
+                      type="radio" 
+                      name={`test-question-${currentQuestion}`} 
+                      checked={isSelected} 
+                      readOnly 
                     />
+                    <div className={`qz-radio-circle ${isSelected ? "active" : ""}`} />
                     <span className="qz-option-label">{option}</span>
                   </div>
                 );
@@ -160,10 +154,15 @@ const AbilityTestPage = () => {
                   const qNumber = idx + 1;
                   const isAnswered = answers[qNumber] !== undefined;
                   const isCurrent = qNumber === currentQuestion;
+
+                  let testNumStatus = "num-default";
+                  if (isAnswered) testNumStatus = "num-answered";
+                  else if (isCurrent) testNumStatus = "num-current";
+
                   return (
                     <div
                       key={q.item_id}
-                      className={`qz-number-item at-option-clickable ${isAnswered ? "filled" : ""} ${isCurrent ? "current" : ""}`}
+                      className={`qz-number-item qz-num-item-flex at-option-clickable ${testNumStatus}`}
                       onClick={() => setCurrentQuestion(qNumber)}
                     >
                       {qNumber}
@@ -176,31 +175,26 @@ const AbilityTestPage = () => {
             <div className="at-sidebar-nav-container">
               <div className="at-btn-flex-row">
                 <button
-                  className="qz-nav-btn prev at-btn-prev-state"
+                  className={`qz-nav-btn prev ${currentQuestion === 1 ? "btn-prev-disabled" : "btn-prev-active"}`}
                   disabled={currentQuestion === 1}
-                  onClick={() =>
-                    setCurrentQuestion((prev) => Math.max(1, prev - 1))
-                  }
-                  style={{ opacity: currentQuestion === 1 ? 0.5 : 1 }}
+                  onClick={() => setCurrentQuestion((prev) => Math.max(1, prev - 1))}
                 >
                   <ChevronLeft size={18} />
-                  <span>Sebelumnya</span>
+                  <span className="qz-nav-btn-text">Sebelumnya</span>
                 </button>
 
                 <button
-                  className={`qz-nav-btn next at-btn-next-state ${isNextDisabled ? "disabled" : "active"}`}
+                  className={`qz-nav-btn next ${isNextDisabled ? "btn-next-disabled" : "btn-next-active"}`}
                   disabled={isNextDisabled || isSubmitting}
                   onClick={() => {
                     if (currentQuestion === questions.length) {
                       handleSubmit();
                     } else {
-                      setCurrentQuestion((prev) =>
-                        Math.min(questions.length, prev + 1),
-                      );
+                      setCurrentQuestion((prev) => Math.min(questions.length, prev + 1));
                     }
                   }}
                 >
-                  <span>
+                  <span className="qz-nav-btn-text">
                     {isSubmitting
                       ? "Memproses..."
                       : currentQuestion === questions.length
@@ -214,16 +208,8 @@ const AbilityTestPage = () => {
               </div>
 
               {isNextDisabled && (
-                <p
-                  className="at-error-progress"
-                  style={{
-                    marginTop: "12px",
-                    fontSize: "13px",
-                    color: "#e74c3c",
-                  }}
-                >
-                  * Belum bisa selesai. Baru menjawab {totalAnswered} dari{" "}
-                  {questions.length} soal.
+                <p className="at-error-progress-text">
+                  * Belum bisa selesai. Baru menjawab {totalAnswered} dari {questions.length} soal.
                 </p>
               )}
             </div>
@@ -233,50 +219,31 @@ const AbilityTestPage = () => {
 
       {/* MODAL HASIL TEST */}
       {showResultModal && (
-        <div style={styles.overlay}>
-          <div style={styles.modalCard}>
-            <h2 style={styles.modalTitle}>Kemampuan Awal Terukur!</h2>
-            <div
-              style={{
-                margin: "20px 0",
-                padding: "16px",
-                background: "#f8f9fa",
-                borderRadius: "8px",
-              }}
-            >
-              <p style={{ ...styles.modalText, marginBottom: "8px" }}>
+        <div className="at-modal-overlay">
+          <div className="at-modal-card">
+            <h2 className="at-modal-title">Kemampuan Awal Terukur!</h2>
+            <div className="at-modal-summary-box">
+              <p className="at-modal-text-row-margin">
                 Jawaban Benar:{" "}
                 <strong style={{ color: "#27ae60", fontSize: "18px" }}>
                   {resultData?.jumlah_benar}
                 </strong>{" "}
                 / {resultData?.total_soal}
               </p>
-              <p style={{ ...styles.modalText }}>
+              <p className="at-modal-text-row">
                 Skor Kemampuan (Theta):{" "}
                 <strong style={{ color: "#2980b9", fontSize: "18px" }}>
                   {resultData?.theta_awal}
                 </strong>
               </p>
             </div>
-            <p
-              style={{
-                fontSize: "14px",
-                color: "#7f8c8d",
-                marginBottom: "20px",
-              }}
-            >
+            <p className="at-modal-desc-muted">
               Skor ini akan digunakan oleh sistem adaptif untuk menyesuaikan
               tingkat kesulitan latihan Anda selanjutnya.
             </p>
             <button
               onClick={() => navigate("/home")}
-              className="btn-login-black"
-              style={{
-                width: "100%",
-                padding: "12px",
-                borderRadius: "8px",
-                fontWeight: "bold",
-              }}
+              className="btn-login-black at-modal-submit-btn"
             >
               Masuk ke Dashboard Utama
             </button>
@@ -285,41 +252,6 @@ const AbilityTestPage = () => {
       )}
     </div>
   );
-};
-
-// CSS untuk Modal Hasil
-const styles = {
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.6)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 9999,
-    padding: "20px",
-  },
-  modalCard: {
-    background: "#fff",
-    padding: "32px",
-    borderRadius: "16px",
-    maxWidth: "420px",
-    width: "100%",
-    textAlign: "center",
-    display: "flex",
-    flexDirection: "column",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
-  },
-  modalTitle: {
-    margin: 0,
-    fontSize: "24px",
-    fontWeight: "800",
-    color: "#2c3e50",
-  },
-  modalText: { fontSize: "16px", margin: 0, color: "#34495e" },
 };
 
 export default AbilityTestPage;

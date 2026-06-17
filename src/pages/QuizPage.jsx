@@ -9,12 +9,9 @@ const QuizEngine = ({ type = "quiz" }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const initData = location.state?.quizData;
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sessionId] = useState(initData?.session_id);
   const [documentId] = useState(initData?.document_id);
-
-  // STATE DINAMIS
   const [questionsList, setQuestionsList] = useState(initData ? [initData] : []);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -22,8 +19,6 @@ const QuizEngine = ({ type = "quiz" }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isEnding, setIsEnding] = useState(false);
   const [selectedFlags, setSelectedFlags] = useState({});
-
-  // Flag untuk cegah double handling saat back
   const isBackNavigationHandled = useRef(false);
 
   const questionNumbers = Array.from(
@@ -31,7 +26,6 @@ const QuizEngine = ({ type = "quiz" }) => {
     (_, i) => i + 1,
   );
 
-  // ALERT KETIKA TOMBOL BACK/REFRESH/CLOSE TAB
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       event.preventDefault();
@@ -46,30 +40,24 @@ const QuizEngine = ({ type = "quiz" }) => {
     };
   }, []);
 
-  // HANDLE TOMBOL BACK BROWSER
   useEffect(() => {
     const handlePopState = (event) => {
-      // Cegah jika sudah di-handle sebelumnya
       if (isBackNavigationHandled.current) return;
       
-      // Cek apakah ada jawaban yang sudah dipilih tapi belum disimpan
       const hasUnsubmittedAnswers = Object.keys(selectedFlags).length > 0;
       const hasSelectedCurrent = selectedOption !== null && !isPastQuestion();
       const hasAnyAnswer = hasUnsubmittedAnswers || hasSelectedCurrent || Object.keys(answersHistory).length > 0;
       
       let message = "";
       if (hasAnyAnswer) {
-        // Jika sudah ada jawaban (apapun)
         message = "Anda memiliki jawaban yang sudah dipilih.\n\nApakah Anda yakin ingin keluar dari sesi latihan?\n\n⚠️ PERINGATAN:\n• Jawaban yang sudah tersimpan akan tetap tersimpan\n• Jawaban yang belum dikirim akan HILANG\n• Skor akhir tidak akan dihitung jika keluar sekarang\n\nKlik 'OK' untuk keluar, atau 'Batal' untuk melanjutkan latihan.";
       } else {
-        // Jika belum ada jawaban sama sekali
         message = "Anda BELUM menjawab soal apapun.\n\nApakah Anda yakin ingin keluar dari sesi latihan?\n\nSesi ini akan berakhir dan Anda harus memulai dari awal.\n\nKlik 'OK' untuk keluar, atau 'Batal' untuk melanjutkan latihan.";
       }
       
       const isConfirmed = window.confirm(message);
       
       if (!isConfirmed) {
-        // Batal: push state lagi supaya tetap di halaman ini
         isBackNavigationHandled.current = true;
         window.history.pushState(null, "", window.location.href);
         setTimeout(() => {
@@ -78,18 +66,12 @@ const QuizEngine = ({ type = "quiz" }) => {
         return;
       }
       
-      // Jika confirm, bersihkan flag dan lanjutkan navigasi back
       isBackNavigationHandled.current = true;
-      
-      // Opsional: simpan state sebelum keluar (tapi karena user confirm, kita biarkan dia keluar)
-      // Navigasi akan dilanjutkan secara alami oleh browser
-      
       setTimeout(() => {
         isBackNavigationHandled.current = false;
       }, 500);
     };
     
-    // Push state awal untuk bisa di-intercept
     window.history.pushState(null, "", window.location.href);
     window.addEventListener("popstate", handlePopState);
     
@@ -98,12 +80,11 @@ const QuizEngine = ({ type = "quiz" }) => {
     };
   }, [selectedFlags, selectedOption, answersHistory]);
 
-  // Helper: cek apakah soal sekarang adalah soal masa lalu (review mode)
   const isPastQuestion = () => currentQuestion < questionsList.length;
 
   if (questionsList.length === 0)
     return (
-      <div style={{ padding: "20px", textAlign: "center" }}>Memuat soal...</div>
+      <div className="p-10 text-center">Memuat soal...</div>
     );
 
   const currentQuestionData = questionsList[currentQuestion - 1];
@@ -267,69 +248,29 @@ const QuizEngine = ({ type = "quiz" }) => {
               <div className="qz-card-number">{currentQuestion}</div>
             )}
 
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "12px",
-              }}
-            >
+            <div className="qz-header-row">
               <h2 className="qz-context-title" style={{ margin: 0 }}>
                 Konteks Bacaan
               </h2>
-              <span
-                style={{
-                  fontSize: "12px",
-                  background: "#e2e8f0",
-                  padding: "4px 8px",
-                  borderRadius: "4px",
-                  fontWeight: "bold",
-                }}
-              >
+              <span className="qz-difficulty-badge">
                 Tingkat: {currentQuestionData.difficulty_level?.toUpperCase()}
               </span>
             </div>
 
             <div className="qz-context-body">
               {isPastQuestion() ? (
-                <p
-                  style={{
-                    fontStyle: "italic",
-                    color: "#ef4444",
-                    fontSize: "13px",
-                    marginBottom: "12px",
-                    fontWeight: "600",
-                  }}
-                >
-                  *Mode Review: Anda sedang melihat soal sebelumnya. Jawaban
-                  telah dikunci permanen.
+                <p className="qz-review-mode-warning">
+                  *Mode Review: Anda sedang melihat soal sebelumnya. Jawaban telah dikunci permanen.
                 </p>
               ) : (
-                <p
-                  style={{
-                    fontStyle: "italic",
-                    color: "#64748b",
-                    fontSize: "13px",
-                    marginBottom: "12px",
-                  }}
-                >
-                  *Sistem Adaptif: AI terus menyesuaikan tingkat kesulitan. Anda
-                  dapat mengakhiri sesi kapan saja.
+                <p className="qz-adaptive-mode-info">
+                  *Sistem Adaptif: AI terus menyesuaikan tingkat kesulitan. Anda dapat mengakhiri sesi kapan saja.
                 </p>
               )}
 
-              <div
-                style={{
-                  background: "#f8f9fa",
-                  padding: "16px",
-                  borderRadius: "8px",
-                  borderLeft: "4px solid #3b82f6",
-                }}
-              >
-                <p style={{ lineHeight: "1.6", textAlign: "justify" }}>
-                  {currentQuestionData.reading_context ||
-                    "Tidak ada teks bacaan."}
+              <div className="qz-reading-box">
+                <p>
+                  {currentQuestionData.reading_context || "Tidak ada teks bacaan."}
                 </p>
               </div>
             </div>
@@ -353,9 +294,13 @@ const QuizEngine = ({ type = "quiz" }) => {
                       opacity: (isPastQuestion() || isEnding) && !isSelected ? 0.6 : 1,
                     }}
                   >
-                    <div
-                      className={`qz-radio-circle ${isSelected ? "active" : ""}`}
+                    <input 
+                      type="radio" 
+                      name={`question-${currentQuestion}`} 
+                      checked={isSelected} 
+                      readOnly 
                     />
+                    <div className={`qz-radio-circle ${isSelected ? "active" : ""}`} />
                     <span className="qz-option-label">{option}</span>
                   </div>
                 );
@@ -372,23 +317,15 @@ const QuizEngine = ({ type = "quiz" }) => {
                   const isAnswered = isQuestionAnswered(num);
                   const isCurrent = num === currentQuestion;
 
+                  let numberStatusClass = "num-default";
+                  if (isAnswered) numberStatusClass = "num-answered";
+                  else if (isCurrent) numberStatusClass = "num-current";
+
                   return (
                     <div
                       key={num}
-                      className={`qz-number-item ${isAnswered ? "filled" : ""} ${isCurrent ? "current" : ""}`}
+                      className={`qz-number-item qz-num-item-flex ${numberStatusClass} ${isEnding ? "qz-freeze-opacity" : ""}`}
                       onClick={() => !isEnding && setCurrentQuestion(num)}
-                      style={{
-                        cursor: isEnding ? "not-allowed" : "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        backgroundColor: isAnswered ? "#9ca3af" : (
-                          isCurrent ? "#3b82f6" : "#ffffff"),
-                        color: isAnswered ? "#ffffff" : ( 
-                          isCurrent ? "#ffffff" : "#1e293b"),
-                        border: !isAnswered && !isCurrent ? "1px solid #e2e8f0" : "none",
-                        opacity: isEnding ? 0.6 : 1,
-                      }}
                     >
                       {num}
                     </div>
@@ -397,86 +334,31 @@ const QuizEngine = ({ type = "quiz" }) => {
               </div>
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
-                marginTop: "auto",
-              }}
-            >
-              <div
-                className="qz-sidebar-nav-bottom"
-                style={{
-                  display: "flex",
-                  gap: "8px",
-                  padding: 0,
-                  border: "none",
-                  background: "transparent",
-                }}
-              >
+            <div className="qz-sidebar-bottom-actions">
+              <div className="qz-sidebar-nav-btn-container">
                 <button
-                  className="qz-nav-btn prev"
+                  className={`qz-nav-btn prev ${
+                    currentQuestion === 1 || isLoading || isEnding 
+                      ? "btn-prev-disabled" 
+                      : "btn-prev-active"
+                  }`}
                   disabled={currentQuestion === 1 || isLoading || isEnding}
                   onClick={handlePrev}
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "4px",
-                    backgroundColor:
-                      currentQuestion === 1 || isLoading || isEnding
-                        ? "#f8f9fa"
-                        : "#ffffff",
-                    color:
-                      currentQuestion === 1 || isLoading || isEnding
-                        ? "#cbd5e1"
-                        : "#1e293b",
-                    border:
-                      currentQuestion === 1 || isLoading || isEnding
-                        ? "1px solid #e2e8f0"
-                        : "1px solid #cbd5e1",
-                    cursor:
-                      currentQuestion === 1 || isLoading || isEnding
-                        ? "not-allowed"
-                        : "pointer",
-                    padding: "12px 0",
-                    borderRadius: "8px",
-                    transition: "all 0.2s ease",
-                  }}
                 >
                   <ChevronLeft size={18} />
-                  <span style={{ fontWeight: "600", fontSize: "14px" }}>
-                    Sebelumnya
-                  </span>
+                  <span className="qz-nav-btn-text">Sebelumnya</span>
                 </button>
 
                 <button
-                  className="qz-nav-btn next"
+                  className={`qz-nav-btn next ${
+                    selectedOption === null || isLoading || isEnding 
+                      ? "btn-next-disabled" 
+                      : "btn-next-active"
+                  }`}
                   onClick={handleNext}
                   disabled={selectedOption === null || isLoading || isEnding}
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "4px",
-                    color: "#ffffff",
-                    backgroundColor:
-                      selectedOption === null || isLoading || isEnding
-                        ? "#9ca3af"
-                        : "#111827",
-                    cursor:
-                      selectedOption === null || isLoading || isEnding
-                        ? "not-allowed"
-                        : "pointer",
-                    padding: "12px 0",
-                    borderRadius: "8px",
-                    transition: "all 0.2s ease",
-                  }}
                 >
-                  <span>{isLoading ? "Memproses..." : "Selanjutnya"}</span>
+                  <span className="qz-nav-btn-text">{isLoading ? "Memproses..." : "Selanjutnya"}</span>
                   {!isLoading && <ChevronRight size={18} />}
                 </button>
               </div>
@@ -484,31 +366,12 @@ const QuizEngine = ({ type = "quiz" }) => {
               <button
                 onClick={handleEndSession}
                 disabled={isEnding}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                  width: "100%",
-                  padding: "12px",
-                  backgroundColor: isEnding ? "#9ca3af" : "#ef4444",
-                  color: "white",
-                  borderRadius: "8px",
-                  fontWeight: "600",
-                  border: "none",
-                  cursor: isEnding ? "not-allowed" : "pointer",
-                  transition: "background-color 0.2s",
-                  boxShadow: "0 4px 6px -1px rgba(239, 68, 68, 0.2)",
-                }}
-                onMouseOver={(e) => {
-                  if (!isEnding) e.currentTarget.style.backgroundColor = "#dc2626";
-                }}
-                onMouseOut={(e) => {
-                  if (!isEnding) e.currentTarget.style.backgroundColor = "#ef4444";
-                }}
+                className={`qz-btn-submit-action ${
+                  isEnding ? "btn-end-disabled" : "btn-end-active"
+                }`}
               >
                 <CheckSquare size={18} />
-                {isEnding ? "Menyimpan Jawaban..." : "Akhiri Sesi Latihan"}
+                <span>{isEnding ? "Menyimpan Jawaban..." : "Akhiri Sesi Latihan"}</span>
               </button>
             </div>
           </div>

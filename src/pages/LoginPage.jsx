@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react"; // Tambahkan impor ikon mata
 import logoIcon from "../assets/boy2.jpg";
 import { login, checkUserStatus, startAbilityTest } from "../../utils/api";
 
@@ -8,6 +9,7 @@ const LoginPage = () => {
 
   const [showGuideModal, setShowGuideModal] = useState(false);
   const [isGeneratingSoal, setIsGeneratingSoal] = useState(false);
+  const [showPass, setShowPass] = useState(false); // State baru untuk kontrol toggle password
 
   const [formData, setFormData] = useState({
     email: "",
@@ -70,7 +72,7 @@ const LoginPage = () => {
         state: { testData: testResponse.data },
       });
     } catch (err) {
-      alert("Gagal menyiapkan soal ujian: " + err.message);
+      alert("Gagal menyiapkan soal ujian: " + error.message);
     } finally {
       setIsGeneratingSoal(false);
     }
@@ -108,14 +110,24 @@ const LoginPage = () => {
 
               <div className="input-group">
                 <label>Masukkan Kata Sandi</label>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Masukkan Kata Sandi"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
+                {/* Dibungkus dengan password-wrapper agar posisi ikon mata berada di dalam input box */}
+                <div className="password-wrapper">
+                  <input
+                    type={showPass ? "text" : "password"} // Tipe berubah dinamis berdasarkan state
+                    name="password"
+                    placeholder="Masukkan Kata Sandi"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPass(!showPass)}
+                  >
+                    {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
               </div>
 
               <button type="submit" className="btn-login-black">
@@ -126,12 +138,7 @@ const LoginPage = () => {
             <div className="signup-footer">
               <p>
                 Belum punya akun?{" "}
-                <span
-                  onClick={() => navigate("/register")}
-                  className="reg-link-style"
-                >
-                  Daftar sekarang
-                </span>
+                <Link to="/register">Daftar sekarang</Link>
               </p>
             </div>
           </div>
@@ -143,9 +150,8 @@ const LoginPage = () => {
           <div className="login-modal-card">
             <h2 className="login-modal-title">Petunjuk Ability Test</h2>
             <p className="login-modal-text">
-              Sebelum masuk ke aplikasi utama, Anda diwajibkan mengikuti
-              <strong> Tes Kemampuan Awal </strong>
-              terlebih dahulu.
+              Before entering the main application, you are required to take the
+              <strong> Initial Ability Test </strong> first.
             </p>
 
             <button

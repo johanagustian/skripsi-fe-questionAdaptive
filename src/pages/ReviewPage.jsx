@@ -40,14 +40,35 @@ const ReviewPage = () => {
       <main className="hp-container rv-main-layout">
         <div className="rv-content-left">
           <div className="rv-question-card rv-reading-context-card">
-            <div className="rv-reading-header">
-              <BookOpen size={18} className="text-blue-600" />
-              <h3 className="m-0 text-base">Konteks Bacaan</h3>
-              <span className="rv-difficulty-tag">Tingkat: {currentQuiz.difficulty_level?.toUpperCase()}</span>
+            <div className="qz-header-row">
+              <h2 className="qz-context-title" style={{ margin: 0 }}>
+                Konteks Bacaan
+              </h2>
+              <span className="qz-difficulty-badge">
+                Tingkat: {currentQuiz.difficulty_level?.toUpperCase()}
+              </span>
             </div>
-            <p className="rv-reading-text">
-              {currentQuiz.reading_context || "Tidak ada teks bacaan untuk soal ini."}
-            </p>
+
+            <div className="qz-context-body">
+              <p className="qz-review-mode-warning">
+                *Mode Review: Anda sedang melihat pembahasan latihan soal yang telah diselesaikan.
+              </p>
+
+              <div className="rv-reading-box-spec">
+                {currentQuiz.reading_context ? (
+                  currentQuiz.reading_context.split("\n").map((paragraph, index) => {
+                    if (paragraph.trim() === "") return null;
+                    return (
+                      <p key={index}>
+                        {paragraph}
+                      </p>
+                    );
+                  })
+                ) : (
+                  <p>Tidak ada teks bacaan untuk soal ini.</p>
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="rv-question-card">
@@ -62,6 +83,13 @@ const ReviewPage = () => {
                       borderColor: isCorrectAnswer ? "#10b981" : isUserChoice && !currentQuiz.is_correct ? "#ef4444" : "#e2e8f0",
                       backgroundColor: isCorrectAnswer ? "#f0fdf4" : isUserChoice && !currentQuiz.is_correct ? "#fef2f2" : "transparent"
                     }}>
+                    {/* Tambahkan elemen input di bawah ini untuk mengikat manipulasi sembunyi di CSS */}
+                    <input
+                      type="radio"
+                      name={`review-question-${currentNum}`}
+                      checked={isUserChoice}
+                      readOnly
+                    />
                     <div className={`rv-dot ${isUserChoice ? "active" : ""}`} />
                     <span style={{ fontWeight: isCorrectAnswer ? "600" : "normal" }}>{option}</span>
                   </div>
