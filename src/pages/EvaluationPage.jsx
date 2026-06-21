@@ -25,7 +25,7 @@ const EvaluationPage = () => {
       background: "transparent",
     },
     stroke: { curve: "monotoneCubic", width: 3 },
-    colors: ["#3b82f6"],
+    colors: ["#3b82f6"], // Warna garis utama grafik (Biru)
     xaxis: {
       title: { text: "Soal Ke-", style: { fontSize: "12px", fontWeight: 500 } },
       labels: { style: { fontSize: "12px", colors: "#6b7280" } },
@@ -46,6 +46,8 @@ const EvaluationPage = () => {
       strokeWidth: 2,
       strokeColors: "#fff",
       hover: { size: 8 },
+      // markers.discrete diisi dinamis agar ApexCharts dipaksa mengganti warna per titik kuis
+      discrete: [], 
     },
     tooltip: {
       custom: ({ seriesIndex, dataPointIndex, w }) => {
@@ -68,14 +70,17 @@ const EvaluationPage = () => {
         const response = await getSessionSummary(session_id);
         setSummaryData(response.data.summary);
         setFileName(response.data.fileName);
+        
         const rawChartData = Array.isArray(response.data.history_chart)
           ? response.data.history_chart
           : [];
+          
         let formattedChartData = rawChartData.map((item) => ({
           step: Number(item.step),
           theta_score: Number(Number(item.theta_score).toFixed(3)),
           is_correct: item.is_correct,
         }));
+        
         if (formattedChartData.length > 0 && formattedChartData[0].step !== 0) {
           formattedChartData = [
             { step: 0, theta_score: 0, is_correct: null },
@@ -93,27 +98,41 @@ const EvaluationPage = () => {
     if (session_id) fetchSummary();
   }, [session_id, navigate]);
 
+  // Logika perbaikan menggunakan penanda diskrit (discrete markers)
   useEffect(() => {
     if (chartData.length > 0) {
       const validData = chartData.filter((d) => d.step !== 0);
       if (validData.length === 0) return;
+      
+      const formattedSeriesData = validData.map((d) => ({
+        x: d.step,
+        y: d.theta_score,
+        step: d.step,
+        theta_score: d.theta_score,
+        is_correct: d.is_correct,
+      }));
+
       setChartSeries([
         {
           name: "Theta Score",
-          data: validData.map((d) => ({
-            x: d.step,
-            y: d.theta_score,
-            step: d.step,
-            theta_score: d.theta_score,
-            is_correct: d.is_correct,
-          })),
+          data: formattedSeriesData,
         },
       ]);
+
+      // Membuat array berisi penanda khusus untuk setiap indeks titik kuis
+      const discreteMarkersArray = validData.map((d, index) => ({
+        seriesIndex: 0,
+        dataPointIndex: index,
+        fillColor: d.is_correct ? "#10b981" : "#ef4444", // Hijau jika benar, Merah jika salah
+        strokeColor: "#ffffff",
+        size: 6
+      }));
+
       setChartOptions((prev) => ({
         ...prev,
         markers: {
           ...prev.markers,
-          colors: validData.map((d) => (d.is_correct ? "#10b981" : "#ef4444")),
+          discrete: discreteMarkersArray, // Masukkan ke dalam opsi discrete kustom
         },
       }));
     }
@@ -172,7 +191,7 @@ const EvaluationPage = () => {
           <div className="hp-section-title">
             <h2>Performa Grafik</h2>
             <p>
-              Perubahan Kemampuan:
+              Perubahan Kemampuan:{" "}
               <strong
                 style={{
                   color:
@@ -183,7 +202,7 @@ const EvaluationPage = () => {
                         : "#64748b",
                 }}
               >
-                {summaryData.theta_delta > 0
+                {summaryData.theta_delta > 0 && !String(summaryData.theta_delta).startsWith('+')
                   ? `+${summaryData.theta_delta}`
                   : summaryData.theta_delta}
               </strong>
