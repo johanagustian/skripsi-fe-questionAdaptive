@@ -31,25 +31,25 @@ const HistoryPage = () => {
             <div className="hist-container">
                 <header className="hist-header">
                     <button className="btn-back" onClick={() => navigate('/home')}>
-                        <ChevronLeft size={20} /> Kembali
+                        <ChevronLeft size={20} /> Back
                     </button>
-                    <h1 className="hist-title">Semua Riwayat Latihan</h1>
+                    <h1 className="hist-title">All Practice History</h1>
                     <p className="hist-subtitle">
-                        Pantau seluruh perkembangan hasil belajar kamu dari awal hingga saat ini.
+                        Monitor your learning progress from the beginning to the present.
                     </p>
                 </header>
 
                 <div className="hist-list">
                     {isLoading ? (
                         <div className="hist-loading-state">
-                            <p>Memuat seluruh data riwayat...</p>
+                            <p>Loading all history data...</p>
                         </div>
                     ) : historyData.length === 0 ? (
                         <div className="hist-empty-state">
                             <Inbox size={48} color="#94a3b8" style={{ margin: '0 auto 16px' }} />
-                            <p className="hist-empty-title">Belum ada sesi latihan.</p>
+                            <p className="hist-empty-title">No practice sessions available.</p>
                             <p className="hist-empty-subtitle">
-                                Semua sesi latihan yang sudah kamu selesaikan akan muncul di sini.
+                                Track your learning progress and review all completed practice sessions.
                             </p>
                         </div>
                     ) : (
@@ -61,7 +61,7 @@ const HistoryPage = () => {
                                         <div className="hist-doc-wrapper">
                                             <FileText size={18} className="text-gray-600" />
                                             <h3 className="hist-exercise-title">
-                                                {item.document_name || `Sesi Latihan (${shortSessionId})`}
+                                                {item.document_name || `Practice Session (${shortSessionId})`}
                                             </h3>
                                         </div>
                                         <div className="hist-meta">
@@ -76,15 +76,15 @@ const HistoryPage = () => {
 
                                     <div className="hist-card-stats">
                                         <div className="stat-box">
-                                            <span className="stat-label">Skor</span>
+                                            <span className="stat-label">Score</span>
                                             <span className="stat-value text-green">{item.score ?? 0}</span>
                                         </div>
                                         <div className="stat-box">
-                                            <span className="stat-label">Kemampuan</span>
+                                            <span className="stat-label">Ability</span>
                                             <span className="ability-up">{item.theta_increase ?? "0.00"}</span>
                                         </div>
                                         <div className="stat-box">
-                                            <span className="stat-label">Soal</span>
+                                            <span className="stat-label">Questions</span>
                                             <span className="stat-value">{item.total_soal ?? 0}</span>
                                         </div>
                                         <button

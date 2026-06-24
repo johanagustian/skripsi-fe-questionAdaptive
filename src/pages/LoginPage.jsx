@@ -97,11 +97,11 @@ const LoginPage = () => {
 
             <form onSubmit={handleLogin}>
               <div className="input-group">
-                <label>Masukkan Email</label>
+                <label>Email</label>
                 <input
                   type="email"
                   name="email"
-                  placeholder="Masukkan Email"
+                  placeholder="Enter Email"
                   value={formData.email}
                   onChange={handleChange}
                   required
@@ -109,13 +109,13 @@ const LoginPage = () => {
               </div>
 
               <div className="input-group">
-                <label>Masukkan Kata Sandi</label>
+                <label>Password</label>
                 {/* Dibungkus dengan password-wrapper agar posisi ikon mata berada di dalam input box */}
                 <div className="password-wrapper">
                   <input
                     type={showPass ? "text" : "password"} // Tipe berubah dinamis berdasarkan state
                     name="password"
-                    placeholder="Masukkan Kata Sandi"
+                    placeholder="Enter Password"
                     value={formData.password}
                     onChange={handleChange}
                     required
@@ -131,14 +131,14 @@ const LoginPage = () => {
               </div>
 
               <button type="submit" className="btn-login-black">
-                Masuk
+                Login
               </button>
             </form>
 
             <div className="signup-footer">
               <p>
-                Belum punya akun?{" "}
-                <Link to="/register">Daftar sekarang</Link>
+                don't have an account yet?{" "}
+                <Link to="/register">Register here</Link>
               </p>
             </div>
           </div>

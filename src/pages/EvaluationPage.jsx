@@ -27,7 +27,7 @@ const EvaluationPage = () => {
     stroke: { curve: "monotoneCubic", width: 3 },
     colors: ["#3b82f6"], // Warna garis utama grafik (Biru)
     xaxis: {
-      title: { text: "Soal Ke-", style: { fontSize: "12px", fontWeight: 500 } },
+      title: { text: "Question -", style: { fontSize: "12px", fontWeight: 500 } },
       labels: { style: { fontSize: "12px", colors: "#6b7280" } },
       axisBorder: { show: false },
       axisTicks: { show: false },
@@ -54,9 +54,9 @@ const EvaluationPage = () => {
         const data = w.config.series[seriesIndex].data[dataPointIndex];
         if (!data || data.step === 0) return null;
         return `<div style="padding: 10px 14px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;">
-            <strong style="display: block; margin-bottom: 6px; font-size: 14px;">Soal Ke-${data.step}</strong>
+            <strong style="display: block; margin-bottom: 6px; font-size: 14px;">Question Number-${data.step}</strong>
             <div style="font-size: 13px; margin-bottom: 4px;">Theta: <strong>${Number(data.theta_score).toFixed(3)}</strong></div>
-            <div style="font-size: 13px; color: ${data.is_correct ? "#10b981" : "#ef4444"};">${data.is_correct ? "✓ Jawaban Benar" : "✗ Jawaban Salah"}</div>
+            <div style="font-size: 13px; color: ${data.is_correct ? "#10b981" : "#ef4444"};">${data.is_correct ? "✓ Correct Answer" : "✗ Incorrect Answer"}</div>
           </div>`;
       },
     },
@@ -140,7 +140,7 @@ const EvaluationPage = () => {
 
   if (isLoading)
     return (
-      <div className="ev-loading-container">Menghitung kalkulasi IRT...</div>
+      <div className="ev-loading-container">Calculating IRT results...</div>
     );
   if (!summaryData) return null;
 
@@ -148,7 +148,7 @@ const EvaluationPage = () => {
     <div className="hp-wrapper !justify-start !p-0">
       <main className="hp-container !pt-6">
         <button className="btn-back" onClick={() => navigate("/history")}>
-          <ChevronLeft size={20} /> Kembali
+          <ChevronLeft size={20} /> Back
         </button>
         <div className="up-file-card">
           <div className="up-file-icon">
@@ -156,25 +156,25 @@ const EvaluationPage = () => {
           </div>
           <div className="up-file-info">
             <p className="up-file-name ev-file-name-display">{fileName}</p>
-            <span className="up-file-status">Latihan Selesai</span>
+            <span className="up-file-status">Practice Completed</span>
           </div>
         </div>
 
         <section className="ev-score-section">
           <div className="hp-section-title text-center">
-            <h2>Hasil Latihan</h2>
-            <p>evaluasi jawaban latihan soal</p>
+            <h2>Practice Results</h2>
+            <p>Evaluation of your practice answers</p>
           </div>
           <div className="ev-score-grid">
             <div className="ev-score-card success">
               <span className="ev-score-value">
                 {summaryData.total_correct}
               </span>
-              <span className="ev-score-label">BENAR</span>
+              <span className="ev-score-label">CORRECT</span>
             </div>
             <div className="ev-score-card danger">
               <span className="ev-score-value">{summaryData.total_wrong}</span>
-              <span className="ev-score-label">SALAH</span>
+              <span className="ev-score-label">WRONG</span>
             </div>
           </div>
           <div className="ev-detail-button-wrapper">
@@ -182,16 +182,16 @@ const EvaluationPage = () => {
               className="ev-detail-link"
               onClick={() => navigate(`/sessions/${session_id}/review`)}
             >
-              Lihat detail jawaban <ChevronRight size={16} />
+              View Answer Details <ChevronRight size={16} />
             </button>
           </div>
         </section>
 
         <section className="ev-graph-section">
           <div className="hp-section-title">
-            <h2>Performa Grafik</h2>
+            <h2>Performance Chart</h2>
             <p>
-              Perubahan Kemampuan:{" "}
+              Ability Change:{" "}
               <strong
                 style={{
                   color:
@@ -219,7 +219,7 @@ const EvaluationPage = () => {
               />
             ) : (
               <div className="ev-chart-empty-state">
-                Data grafik tidak tersedia
+                Chart data is unavailable
               </div>
             )}
           </div>
@@ -229,7 +229,7 @@ const EvaluationPage = () => {
           onClick={() => navigate("/home")}
           className="lp-button-primary ev-full-width-btn"
         >
-          Kembali ke Halaman Utama
+          Back to Home
         </button>
       </main>
       <LogoutOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />

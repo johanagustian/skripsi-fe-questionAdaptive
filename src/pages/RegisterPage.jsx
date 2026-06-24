@@ -72,19 +72,19 @@ const RegisterPage = () => {
 
                         <form onSubmit={handleFormSubmit}>
                             <div className="input-group">
-                                <label>Masukkan Username</label>
-                                <input type="text" name="full_name" placeholder="Masukkan Username" value={formData.full_name} onChange={handleChange} required />
+                                <label>Username</label>
+                                <input type="text" name="full_name" placeholder="Enter Username" value={formData.full_name} onChange={handleChange} required />
                             </div>
 
                             <div className="input-group">
-                                <label>Masukkan Email</label>
-                                <input type="email" name="email" placeholder="Masukkan Email" value={formData.email} onChange={handleChange} required />
+                                <label>Email</label>
+                                <input type="email" name="email" placeholder="Enter Email" value={formData.email} onChange={handleChange} required />
                             </div>
 
                             <div className="input-group">
-                                <label>Masukkan Kata Sandi</label>
+                                <label>Password</label>
                                 <div className="password-wrapper">
-                                    <input type={showPass ? 'text' : 'password'} name="password" placeholder="Masukkan Kata Sandi" value={formData.password} onChange={handleChange} required />
+                                    <input type={showPass ? 'text' : 'password'} name="password" placeholder="Enter Password" value={formData.password} onChange={handleChange} required />
                                     <button type="button" className="password-toggle" onClick={() => setShowPass(!showPass)}>
                                         {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
                                     </button>
@@ -92,21 +92,21 @@ const RegisterPage = () => {
                             </div>
 
                             <div className="input-group">
-                                <label>Konfirmasi Kata Sandi</label>
+                                <label>Confirm Password</label>
                                 <div className="password-wrapper">
-                                    <input type={showConfirm ? 'text' : 'password'} name="confirmPass" placeholder="Konfirmasi Kata Sandi" value={formData.confirmPass} onChange={handleChange} required />
+                                    <input type={showConfirm ? 'text' : 'password'} name="confirmPass" placeholder="Confirm Password" value={formData.confirmPass} onChange={handleChange} required />
                                     <button type="button" className="password-toggle" onClick={() => setShowConfirm(!showConfirm)}>
                                         {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
                                     </button>
                                 </div>
                             </div>
 
-                            <button type="submit" className="btn-register-black">Daftar</button>
+                            <button type="submit" className="btn-register-black">Register</button>
                         </form>
 
                         <div className="signup-footer">
                             <p style={{ fontSize: '14px' }}>
-                                Sudah punya akun? <Link to="/login">Login di sini</Link>
+                                Already have an account? <Link to="/login">Login here</Link>
                             </p>
                         </div>
                     </div>

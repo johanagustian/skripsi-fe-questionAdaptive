@@ -18,7 +18,7 @@ const ReviewPage = () => {
         const response = await getSessionReview(session_id);
         setReviewData(Array.isArray(response?.data) ? response.data : []);
       } catch (error) {
-        alert("Gagal memuat detail pembahasan: " + error.message);
+        alert("Failed to load details: " + error.message);
         navigate("/history");
       } finally {
         setIsLoading(false);
@@ -27,8 +27,8 @@ const ReviewPage = () => {
     if (session_id) fetchReviewData();
   }, [session_id, navigate]);
 
-  if (isLoading) return <div className="p-10 text-center">Memuat data pembahasan...</div>;
-  if (reviewData.length === 0) return <div className="p-10 text-center">Data pembahasan tidak ditemukan.</div>;
+  if (isLoading) return <div className="p-10 text-center">Loading review data...</div>;
+  if (reviewData.length === 0) return <div className="p-10 text-center">Review data not found.</div>;
 
   const currentQuiz = reviewData[currentNum - 1];
   const currentOptions = typeof currentQuiz.options === "string" ? JSON.parse(currentQuiz.options) : (currentQuiz.options || []);
@@ -42,16 +42,16 @@ const ReviewPage = () => {
           <div className="rv-question-card rv-reading-context-card">
             <div className="qz-header-row">
               <h2 className="qz-context-title" style={{ margin: 0 }}>
-                Konteks Bacaan
+                Reading Context
               </h2>
               <span className="qz-difficulty-badge">
-                Tingkat: {currentQuiz.difficulty_level?.toUpperCase()}
+                Level: {currentQuiz.difficulty_level?.toUpperCase()}
               </span>
             </div>
 
             <div className="qz-context-body">
               <p className="qz-review-mode-warning">
-                *Mode Review: Anda sedang melihat pembahasan latihan soal yang telah diselesaikan.
+                *Mode Review: You are currently viewing the review of completed practice questions.
               </p>
 
               <div className="rv-reading-box-spec">
@@ -65,7 +65,7 @@ const ReviewPage = () => {
                     );
                   })
                 ) : (
-                  <p>Tidak ada teks bacaan untuk soal ini.</p>
+                  <p>No reading text available for this question.</p>
                 )}
               </div>
             </div>
@@ -100,9 +100,9 @@ const ReviewPage = () => {
             <div className="rv-correct-banner" style={{ borderLeft: `4px solid ${currentQuiz.is_correct ? "#10b981" : "#ef4444"}`, backgroundColor: currentQuiz.is_correct ? "#f0fdf4" : "#fef2f2" }}>
               <div className="rv-banner-title" style={{ color: currentQuiz.is_correct ? "#15803d" : "#b91c1c" }}>
                 {currentQuiz.is_correct ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
-                <span>{currentQuiz.is_correct ? "Jawaban Anda Benar!" : "Jawaban Anda Kurang Tepat"}</span>
+                <span>{currentQuiz.is_correct ? "Your Answer is Correct!" : "Your Answer is Incorrect"}</span>
               </div>
-              <p className="mt-2 text-sm">Kunci Jawaban: <strong>{currentQuiz.correct_answer}</strong></p>
+              <p className="mt-2 text-sm">Correct Answer: <strong>{currentQuiz.correct_answer}</strong></p>
             </div>
           </div>
         </div>
@@ -111,20 +111,20 @@ const ReviewPage = () => {
           <div className="rv-grid-container">
             {reviewData.map((item, i) => (
               <button key={i} className={`rv-grid-item ${i + 1 === currentNum ? "current" : "completed"}`}
-                onClick={() => setCurrentNum(i + 1)} style={{ borderBottom: `2px solid ${item.is_correct ? "#10b981" : "#ef4444"}` }}>
+                onClick={() => setCurrentNum(i + 1)} style={{ borderBottom: `3px solid ${item.is_correct ? "#10b981" : "#ef4444"}` }}>
                 {i + 1}
               </button>
             ))}
           </div>
           <div className="rv-nav-controls">
-            <button className="rv-nav-button" disabled={currentNum === 1} onClick={() => setCurrentNum(p => p - 1)}>
-              <ChevronLeft size={20} /> Sebelumnya
+            <button className="rv-nav-prev-button" disabled={currentNum === 1} onClick={() => setCurrentNum(p => p - 1)}>
+              <ChevronLeft size={20} /> Previous
             </button>
-            <button className="rv-nav-button" disabled={currentNum === reviewData.length} onClick={() => setCurrentNum(p => p + 1)}>
-              Selanjutnya <ChevronRight size={20} />
+            <button className="rv-nav-next-button" disabled={currentNum === reviewData.length} onClick={() => setCurrentNum(p => p + 1)}>
+              Next <ChevronRight size={20} />
             </button>
           </div>
-          <button className="rv-back-home-btn" onClick={() => navigate("/history")}>Kembali ke Riwayat Latihan</button>
+          <button className="rv-back-home-btn" onClick={() => navigate("/history")}>Back to Practice History</button>
         </div>
       </main>
       <LogoutOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />

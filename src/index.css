@@ -887,7 +887,6 @@
  /* QUIZ */
  .qz-page-wrapper.at-wrapper .qz-content-container {
    padding-top: 40px;
-   /* Diubah dari default 120px menjadi 40px agar jaraknya pas */
  }
 
  .qz-page-wrapper {
@@ -896,12 +895,19 @@
  }
 
  .qz-content-container {
-   max-width: 1250px;
-   margin: 0 auto;
-   padding: 120px 20px;
-   display: flex;
-   gap: 30px;
- }
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 120px 20px;
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.qz-sidebar-sticky-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
  .qz-main-content {
    flex: 1;
@@ -979,11 +985,19 @@
  }
 
  .qz-sidebar-layout-vertical {
-   width: 320px;
-   display: flex;
-   flex-direction: column;
-   gap: 20px;
- }
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: fixed;
+  top: 20px;
+  align-self: flex-start;
+  overflow: auto;
+  z-index: 1;
+
+  left: 70%;
+  top: 5%;
+}
 
  .qz-numbers-card {
    background: white;
@@ -1871,6 +1885,9 @@
  }
 
  .rv-sidebar-right {
+   position: fixed;
+   left: 70%;
+   top: 18%;
    width: 320px;
    display: flex;
    flex-direction: column;
@@ -1883,7 +1900,7 @@
    border-radius: 18px;
    padding: 24px;
    display: grid;
-   grid-template-columns: repeat(5, 1fr);
+   grid-template-columns: repeat(4, 1fr);
    gap: 12px;
    box-shadow: var(--shadow-sm);
  }
@@ -1904,9 +1921,9 @@
  }
 
  .rv-grid-item.current {
-   background: #e5e7eb;
-   color: #374151;
-   border-color: #111827;
+   background: #b8cbf1;
+   color: #333c49;
+   border-color: #b8cbf1;
  }
 
  .rv-grid-item:hover {
@@ -1942,13 +1959,13 @@
 
  .rv-back-home-btn {
    width: 100%;
-   height: 54px;
+   height: 48px;
    border: none;
-   border-radius: 14px;
+   border-radius: 10px;
    background: #111827;
    color: white;
    font-size: 15px;
-   font-weight: 700;
+   font-weight: bold;
    cursor: pointer;
    transition: background 0.2s ease;
  }
@@ -2009,18 +2026,31 @@
    font-weight: 600;
  }
 
- .rv-nav-button {
-   display: flex;
-   align-items: center;
-   gap: 8px;
-   padding: 10px 16px;
-   border-radius: 8px;
-   border: 1px solid #cbd5e1;
-   background: white;
-   font-weight: 600;
-   font-size: 14px;
-   transition: all 0.2s;
- }
+.rv-nav-prev-button,
+.rv-nav-next-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: white;
+
+  font-weight: 600;
+  font-size: 14px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+ .rv-nav-prev-button:hover,
+.rv-nav-next-button:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
 
  html,
  body,
@@ -2094,7 +2124,7 @@
    display: flex;
    flex-direction: column;
    gap: 12px;
-   margin-top: auto;
+   margin-top: 20px;
  }
 
  .qz-sidebar-nav-btn-container {

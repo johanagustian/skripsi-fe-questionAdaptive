@@ -74,7 +74,7 @@ const Navbar = () => {
             className={`nav-inline-btn ${location.pathname === '/home' ? 'active' : ''}`}
           >
             <Home size={18} />
-            <span>Beranda</span>
+            <span>Home</span>
           </button>
         </div>
 
@@ -106,7 +106,7 @@ const Navbar = () => {
           {/* Tombol Logout */}
           <button className="nav-inline-logout" onClick={handleLogout}>
             <LogOut size={16} />
-            <span>Keluar</span>
+            <span>Log out</span>
           </button>
 
         </div>

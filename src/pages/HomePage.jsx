@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, FileText, Calendar, X, Inbox, Loader2 } from "lucide-react";
 import LogoutOverlay from "../components/LogoutOverlay";
-import LogoApta from "../assets/icon1.jpg";
 import logopdf from "../assets/LogoPDF.svg";
 import {
   getCurrentUser,
@@ -163,16 +162,6 @@ const HomePage = () => {
         </div>
       )}
 
-      <nav className="hp-navbar">
-        <div className="hp-nav-logo-container">
-          <img src={LogoApta} alt="Logo Apta" />
-        </div>
-        <button className="hp-menu-btn-new" onClick={() => setIsMenuOpen(true)}>
-          <Menu size={20} />
-          <span>Menu</span>
-        </button>
-      </nav>
-
       <input 
         type="file" 
         ref={fileInputRef} 
@@ -185,13 +174,13 @@ const HomePage = () => {
         <header className="hp-header-card">
           <span className="hp-welcome">Hallo...</span>
           <h1 className="hp-user-name">{username || "Memuat..."}</h1>
-          <p className="hp-subtitle">Apakah kamu siap latihan hari ini?</p>
+          <p className="hp-subtitle">Are you ready to practice today?</p>
         </header>
 
         <section className="hp-section">
           <div className="hp-section-title">
-            <h2>Mulai sesi latihan</h2>
-            <p>Unggah dokumen untuk memulai sesi latihan!</p>
+            <h2>Start a Practice Session</h2>
+            <p>Upload a document to begin your practice session.</p>
           </div>
 
           {!uploadedFile ? (
@@ -199,8 +188,8 @@ const HomePage = () => {
               <div className="hp-upload-icon-box">
                 <FileText className="text-gray-400" size={65} />
               </div>
-              <p className="hp-upload-text">unggah dokumen tipe pdf</p>
-              <button onClick={handleButtonClick} className="hp-btn-upload">Unggah Dokumen</button>
+              <p className="hp-upload-text">Upload a PDF document and max 15 MB</p>
+              <button onClick={handleButtonClick} className="hp-btn-upload">Upload Document</button>
             </div>
           ) : (
             <div className="hp-upload-card active">
@@ -217,16 +206,16 @@ const HomePage = () => {
                 </div>
                 <div className="up-file-info">
                   <p className="up-file-name">{uploadedFile.name}</p>
-                  <span className="up-file-status">*Materi latihan akan dibuat secara otomatis</span>
+                  <span className="up-file-status">*Practice materials will be generated automatically</span>
                 </div>
               </div>
-              <p className="hp-upload-text success">✓ dokumen berhasil diunggah</p>
+              <p className="hp-upload-text success">✓ Document uploaded successfully</p>
               <button 
                 onClick={handleStartSession} 
                 className="lp-button-primary" 
                 disabled={isGeneratingQuiz}
               >
-                {isGeneratingQuiz ? "AI Sedang Mengekstrak..." : "Mulai Sesi Sekarang"}
+                {isGeneratingQuiz ? "AI is extracting content..." : "Start Session Now"}
               </button>
             </div>
           )}
@@ -235,12 +224,12 @@ const HomePage = () => {
         <section className="hp-section">
           <div className="hp-section-title hp-title-container">
             <div>
-              <h2>Riwayat sesi latihan</h2>
-              <p>lihat sesi latihan sebelumnya</p>
+              <h2>Practice Session History</h2>
+              <p>View your previous practice sessions</p>
             </div>
             {historyData.length > 0 && (
               <button onClick={() => navigate("/history")} className="btn-see-more">
-                Lihat Selengkapnya
+                See More
               </button>
             )}
           </div>
@@ -248,12 +237,12 @@ const HomePage = () => {
           <div className="hist-list">
             {isLoadingHistory ? (
               <div className="hp-history-loading">
-                <p>Memuat data riwayat...</p>
+                <p>Loading history...</p>
               </div>
             ) : historyData.length === 0 ? (
               <div className="hp-history-empty">
                 <Inbox size={40} color="#94a3b8" style={{ margin: "0 auto 12px" }} />
-                <p className="hp-history-empty-text">Belum ada sesi latihan.</p>
+                <p className="hp-history-empty-text">No practice sessions available.</p>
               </div>
             ) : (
               historyData.slice(0, 3).map((item) => (
@@ -262,7 +251,7 @@ const HomePage = () => {
                     <div className="hist-doc-wrapper">
                       <FileText size={18} className="text-gray-600" />
                       <h3 className="hist-exercise-title">
-                        {item.file_name || item.document_name || "Sesi Latihan"}
+                        {item.file_name || item.document_name || "Practice Session"}
                       </h3>
                     </div>
                     <div className="hist-meta">
@@ -278,15 +267,15 @@ const HomePage = () => {
                   </div>
                   <div className="hist-card-stats">
                     <div className="stat-box">
-                      <span className="stat-label">Skor</span>
+                      <span className="stat-label">Score</span>
                       <span className="stat-value text-green">{item.score ?? 0}</span>
                     </div>
                     <div className="stat-box">
-                      <span className="stat-label">Kemampuan</span>
+                      <span className="stat-label">Ability</span>
                       <span className="ability-up">{item.theta_increase ?? "0.00"}</span>
                     </div>
                     <div className="stat-box">
-                      <span className="stat-label">Soal</span>
+                      <span className="stat-label">Questions</span>
                       <span className="stat-value">{item.total_soal ?? 0}</span>
                     </div>
                     <button 

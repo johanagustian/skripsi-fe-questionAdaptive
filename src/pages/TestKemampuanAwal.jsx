@@ -8,7 +8,6 @@ const AbilityTestPage = () => {
   const location = useLocation();
 
   const testData = location.state?.testData;
-  console.log("Data tes yang diterima:", testData);
   const questions = testData?.questions || [];
   const sessionId = testData?.session_id;
 
@@ -25,10 +24,12 @@ const AbilityTestPage = () => {
     }
   }, [testData, questions.length, navigate]);
 
-  if (!testData || questions.length === 0) return <div className="p-10 text-center">Memuat soal...</div>;
+  if (!testData || questions.length === 0)
+    return <div className="p-10 text-center">Loading questions...</div>;
 
   const currentQuiz = questions[currentQuestion - 1];
-  const readingContext = currentQuiz?.reading_context || "Teks bacaan tidak tersedia.";
+  const readingContext =
+    currentQuiz?.reading_context || "No reading text available.";
   const totalAnswered = Object.keys(answers).length;
   const isAllQuestionsAnswered = totalAnswered === questions.length;
 
@@ -75,79 +76,90 @@ const AbilityTestPage = () => {
       <div className="qz-content-container">
         {/* Konten Kiri (Teks Bacaan & Soal) */}
         <div className="qz-main-content">
-          <article className="qz-context-card">
-            
-            {/* 1. KOTAK BADGE LEVEL DAN JUDUL YANG SUDAH DISAMAKAN DENNGAN QUIZ */}
-            <div className="qz-header-row">
-              <h2 className="qz-context-title" style={{ margin: 0 }}>
-                English Reading Comprehension
-              </h2>
-              <span className="qz-difficulty-badge">
-                Level : {currentQuiz.difficulty.toUpperCase()}
-              </span>
-            </div>
+            <article className="qz-context-card">
+              {/* 1. KOTAK BADGE LEVEL DAN JUDUL YANG SUDAH DISAMAKAN DENNGAN QUIZ */}
+              <div className="qz-header-row">
+                <h2 className="qz-context-title" style={{ margin: 0 }}>
+                  English Reading Comprehension
+                </h2>
+                <span className="qz-difficulty-badge">
+                  Level : {currentQuiz.difficulty.toUpperCase()}
+                </span>
+              </div>
 
-            <div className="qz-context-body">
-              <p className="at-note-text" style={{ marginBottom: "16px", fontStyle: "italic", fontSize: "13px", color: "#64748b" }}>
-                * <b>Instruksi:</b> Bacalah teks di bawah ini. Anda bebas
-                melompati nomor soal, namun <b>seluruh {questions.length} soal wajib dijawab</b> untuk menyelesaikan tes.
-              </p>
+              <div className="qz-context-body">
+                <p
+                  className="at-note-text"
+                  style={{
+                    marginBottom: "16px",
+                    fontStyle: "italic",
+                    fontSize: "13px",
+                    color: "#64748b",
+                  }}
+                >
+                  * <b>Instructions:</b> Please read the text below. You are
+                  free to skip questions, but{" "}
+                  <b>all {questions.length} questions must be answered</b> to
+                  complete the test.
+                </p>
 
-              {/* 2. MENGGUNAKAN qz-reading-box AGAR LATAR BELAKANG ABU-ABU DAN BORDER BIRU MUNCUL KONSISTEN */}
-              <div className="qz-reading-box at-context-body-scroll">
-                <div className="context-reading-text">
-                  {readingContext.split("\n").map((paragraph, index) => {
-                    if (paragraph.trim() === "") return null;
-                    return (
-                      <p
-                        key={index}
-                        style={{
-                          margin: 0,
-                          marginBottom: "12px",
-                          lineHeight: "1.6",
-                          textAlign: "justify",
-                        }}
-                      >
-                        {paragraph}
-                      </p>
-                    );
-                  })}
+                {/* 2. MENGGUNAKAN qz-reading-box AGAR LATAR BELAKANG ABU-ABU DAN BORDER BIRU MUNCUL KONSISTEN */}
+                <div className="qz-reading-box at-context-body-scroll">
+                  <div className="context-reading-text">
+                    {readingContext.split("\n").map((paragraph, index) => {
+                      if (paragraph.trim() === "") return null;
+                      return (
+                        <p
+                          key={index}
+                          style={{
+                            margin: 0,
+                            marginBottom: "12px",
+                            lineHeight: "1.6",
+                            textAlign: "justify",
+                          }}
+                        >
+                          {paragraph}
+                        </p>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-            </div>
-          </article>
+            </article>
 
-          <section className="qz-question-section">
-            <p className="qz-question-text at-question-text-bold">
-              {currentQuiz.question_text}
-            </p>
-            <div className="qz-options-list">
-              {currentOptions.map((option, index) => {
-                const isSelected = answers[currentQuestion] === index;
-                return (
-                  <div
-                    key={index}
-                    onClick={() => handleSelectOption(index)}
-                    className={`qz-option-item at-option-clickable ${isSelected ? "active" : ""}`}
-                  >
-                    <input 
-                      type="radio" 
-                      name={`test-question-${currentQuestion}`} 
-                      checked={isSelected} 
-                      readOnly 
-                    />
-                    <div className={`qz-radio-circle ${isSelected ? "active" : ""}`} />
-                    <span className="qz-option-label">{option}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
+            <section className="qz-question-section">
+              <p className="qz-question-text at-question-text-bold">
+                {currentQuiz.question_text}
+              </p>
+              <div className="qz-options-list">
+                {currentOptions.map((option, index) => {
+                  const isSelected = answers[currentQuestion] === index;
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => handleSelectOption(index)}
+                      className={`qz-option-item at-option-clickable ${isSelected ? "active" : ""}`}
+                    >
+                      <input
+                        type="radio"
+                        name={`test-question-${currentQuestion}`}
+                        checked={isSelected}
+                        readOnly
+                      />
+                      <div
+                        className={`qz-radio-circle ${isSelected ? "active" : ""}`}
+                      />
+                      <span className="qz-option-label">{option}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
         </div>
 
         {/* Sidebar Kanan (Navigasi Nomor) */}
         <aside className="qz-sidebar-layout-vertical">
-          <div className="qz-sidebar-layout-vertical">
+          <div className="qz-sidebar-sticky-wrapper">
             <div className="qz-numbers-card">
               <div className="qz-number-grid">
                 {questions.map((q, idx) => {
@@ -177,10 +189,12 @@ const AbilityTestPage = () => {
                 <button
                   className={`qz-nav-btn prev ${currentQuestion === 1 ? "btn-prev-disabled" : "btn-prev-active"}`}
                   disabled={currentQuestion === 1}
-                  onClick={() => setCurrentQuestion((prev) => Math.max(1, prev - 1))}
+                  onClick={() =>
+                    setCurrentQuestion((prev) => Math.max(1, prev - 1))
+                  }
                 >
                   <ChevronLeft size={18} />
-                  <span className="qz-nav-btn-text">Sebelumnya</span>
+                  <span className="qz-nav-btn-text">Previously</span>
                 </button>
 
                 <button
@@ -190,16 +204,18 @@ const AbilityTestPage = () => {
                     if (currentQuestion === questions.length) {
                       handleSubmit();
                     } else {
-                      setCurrentQuestion((prev) => Math.min(questions.length, prev + 1));
+                      setCurrentQuestion((prev) =>
+                        Math.min(questions.length, prev + 1),
+                      );
                     }
                   }}
                 >
                   <span className="qz-nav-btn-text">
                     {isSubmitting
-                      ? "Memproses..."
+                      ? "Processing..."
                       : currentQuestion === questions.length
-                        ? "Selesai"
-                        : "Selanjutnya"}
+                        ? "Finish"
+                        : "Next"}
                   </span>
                   {!isSubmitting && currentQuestion !== questions.length && (
                     <ChevronRight size={18} />
@@ -209,7 +225,8 @@ const AbilityTestPage = () => {
 
               {isNextDisabled && (
                 <p className="at-error-progress-text">
-                  * Belum bisa selesai. Baru menjawab {totalAnswered} dari {questions.length} soal.
+                  * Not yet complete. Only {totalAnswered} out of{" "}
+                  {questions.length} questions answered.
                 </p>
               )}
             </div>
@@ -221,31 +238,33 @@ const AbilityTestPage = () => {
       {showResultModal && (
         <div className="at-modal-overlay">
           <div className="at-modal-card">
-            <h2 className="at-modal-title">Kemampuan Awal Terukur!</h2>
+            <h2 className="at-modal-title">
+              Initial Ability Assessment Complete!
+            </h2>
             <div className="at-modal-summary-box">
               <p className="at-modal-text-row-margin">
-                Jawaban Benar:{" "}
+                Correct Answers:{" "}
                 <strong style={{ color: "#27ae60", fontSize: "18px" }}>
                   {resultData?.jumlah_benar}
                 </strong>{" "}
                 / {resultData?.total_soal}
               </p>
               <p className="at-modal-text-row">
-                Skor Kemampuan (Theta):{" "}
+                Initial Ability Score (Theta):{" "}
                 <strong style={{ color: "#2980b9", fontSize: "18px" }}>
                   {resultData?.theta_awal}
                 </strong>
               </p>
             </div>
             <p className="at-modal-desc-muted">
-              Skor ini akan digunakan oleh sistem adaptif untuk menyesuaikan
-              tingkat kesulitan latihan Anda selanjutnya.
+              This score will be used by the adaptive system to adjust the
+              difficulty level of your next practice sessions.
             </p>
             <button
               onClick={() => navigate("/home")}
               className="btn-login-black at-modal-submit-btn"
             >
-              Masuk ke Dashboard Utama
+              Go to Home Page
             </button>
           </div>
         </div>

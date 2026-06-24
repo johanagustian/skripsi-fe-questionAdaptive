@@ -1,8 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoApta from '../assets/boy2.jpg';
-import LogoApta from '../assets/icon1.jpg';
-
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -27,8 +25,10 @@ const LandingPage = () => {
         <div className="lp-visual-container">
           <img src={logoApta} alt="AI Neural Brain" className="lp-brain-img" />
         </div>
-        <h1 className="lp-title">Personalisasi Latihan dengan <br /><span className="lp-title-gradient">Kecerdasan Buatan Adaptif</span></h1>
-        <p className="lp-description">Ubah dokumen teks Anda menjadi soal pilihan ganda secara instan. Belajar lebih efektif dengan tingkat kesulitan yang otomatis menyesuaikan parameter kemampuan Anda.</p>
+        <h1 className="lp-title">Personalize Your Learning with <br /><span className="lp-title-gradient">Adaptive Artificial Intelligence</span></h1>
+        <p className="lp-description">Instantly transform your text documents into multiple-choice quizzes. 
+    Learn more effectively with difficulty levels that automatically adapt 
+    to your skill and performance.</p>
       </section>
     </div>
   );

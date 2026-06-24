@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Menu, ChevronRight, ChevronLeft, CheckSquare } from "lucide-react";
-import LogoApta from "../assets/icon1.jpg";
 import LogoutOverlay from "../components/LogoutOverlay";
 import { submitSessionAnswer, fetchNextQuestion } from "../../utils/api";
 
@@ -30,7 +29,7 @@ const QuizEngine = ({ type = "quiz" }) => {
     const handleBeforeUnload = (event) => {
       event.preventDefault();
       event.returnValue =
-        "Sesi latihan tidak akan tersimpan jika Anda keluar sekarang. Yakin ingin mengakhiri?";
+        "Your practice session will not be saved if you leave now. Are you sure you want to exit?";
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -50,9 +49,9 @@ const QuizEngine = ({ type = "quiz" }) => {
       
       let message = "";
       if (hasAnyAnswer) {
-        message = "Anda memiliki jawaban yang sudah dipilih.\n\nApakah Anda yakin ingin keluar dari sesi latihan?\n\n⚠️ PERINGATAN:\n• Jawaban yang sudah tersimpan akan tetap tersimpan\n• Jawaban yang belum dikirim akan HILANG\n• Skor akhir tidak akan dihitung jika keluar sekarang\n\nKlik 'OK' untuk keluar, atau 'Batal' untuk melanjutkan latihan.";
+        message = "You have selected answers.\n\nAre you sure you want to leave this practice session?\n\n⚠️ WARNING:\n• Submitted answers will remain saved\n• Unsubmitted answers will be LOST\n• Your final score will not be calculated if you leave now\n\nClick 'OK' to leave or 'Cancel' to continue.";
       } else {
-        message = "Anda BELUM menjawab soal apapun.\n\nApakah Anda yakin ingin keluar dari sesi latihan?\n\nSesi ini akan berakhir dan Anda harus memulai dari awal.\n\nKlik 'OK' untuk keluar, atau 'Batal' untuk melanjutkan latihan.";
+        message = "You have not answered any questions yet.\n\nAre you sure you want to leave this practice session?\n\nThis session will end and you will need to start over.\n\nClick 'OK' to leave or 'Cancel' to continue.";
       }
       
       const isConfirmed = window.confirm(message);
@@ -84,7 +83,7 @@ const QuizEngine = ({ type = "quiz" }) => {
 
   if (questionsList.length === 0)
     return (
-      <div className="p-10 text-center">Memuat soal...</div>
+      <div className="p-10 text-center">Loading questions...</div>
     );
 
   const currentQuestionData = questionsList[currentQuestion - 1];
@@ -158,7 +157,7 @@ const QuizEngine = ({ type = "quiz" }) => {
       setCurrentQuestion((prev) => prev + 1);
       setSelectedOption(null);
     } catch (error) {
-      alert("Gagal memproses soal: " + error.message);
+      alert("Failed to process question: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -172,11 +171,11 @@ const QuizEngine = ({ type = "quiz" }) => {
     
     let message = "";
     if (hasUnsubmittedAnswers) {
-      message = "Anda memiliki jawaban yang belum tersimpan.\n\nApakah Anda yakin ingin mengakhiri sesi latihan ini?\n\nSkor dan evaluasi kemampuan (Theta) Anda akan segera dikalkulasi.";
+      message = "You have unsubmitted answers.\n\nAre you sure you want to end this practice session?\n\nYour score and ability evaluation (Theta) will be calculated shortly.";
     } else if (hasSubmittedAnswers) {
-      message = "Apakah Anda yakin ingin mengakhiri sesi latihan ini?\n\nSkor dan evaluasi kemampuan (Theta) Anda akan segera dikalkulasi.";
+      message = "Are you sure you want to end this practice session?\n\nYour score and ability evaluation (Theta) will be calculated immediately.";
     } else {
-      message = "Sesi masih kosong. Keluar sekarang akan membatalkan sesi ini secara permanen. Yakin?";
+      message = "This session is still empty. Leaving now will permanently cancel this session. Are you sure?";
     }
     
     const isConfirmed = window.confirm(message);
@@ -224,23 +223,13 @@ const QuizEngine = ({ type = "quiz" }) => {
       navigate(`/sessions/${sessionId}/summary`);
       
     } catch (error) {
-      alert("Gagal menyimpan jawaban: " + error.message);
+      alert("Failed to save answers:: " + error.message);
       setIsEnding(false);
     }
   };
 
   return (
     <div className="qz-page-wrapper">
-      <nav className="hp-navbar">
-        <div className="hp-nav-logo-container">
-          <img src={LogoApta} alt="Logo Apta" />
-        </div>
-        <button className="hp-menu-btn-new" onClick={() => setIsMenuOpen(true)}>
-          <Menu size={20} />
-          <span>Menu</span>
-        </button>
-      </nav>
-
       <div className="qz-content-container">
         <div className="qz-main-content">
           <article className="qz-context-card">
@@ -250,27 +239,27 @@ const QuizEngine = ({ type = "quiz" }) => {
 
             <div className="qz-header-row">
               <h2 className="qz-context-title" style={{ margin: 0 }}>
-                Konteks Bacaan
+                Reading Context
               </h2>
               <span className="qz-difficulty-badge">
-                Tingkat: {currentQuestionData.difficulty_level?.toUpperCase()}
+                Level: {currentQuestionData.difficulty_level?.toUpperCase()}
               </span>
             </div>
 
             <div className="qz-context-body">
               {isPastQuestion() ? (
                 <p className="qz-review-mode-warning">
-                  *Mode Review: Anda sedang melihat soal sebelumnya. Jawaban telah dikunci permanen.
+                  *Review Mode: You are currently viewing a previous question. Your answer is permanently locked.
                 </p>
               ) : (
                 <p className="qz-adaptive-mode-info">
-                  *Sistem Adaptif: AI terus menyesuaikan tingkat kesulitan. Anda dapat mengakhiri sesi kapan saja.
+                  *Adaptive System: AI continuously adjusts the difficulty level. You can end the session at any time.
                 </p>
               )}
 
               <div className="qz-reading-box">
                 <p>
-                  {currentQuestionData.reading_context || "Tidak ada teks bacaan."}
+                  {currentQuestionData.reading_context || "No reading text available."}
                 </p>
               </div>
             </div>
@@ -310,71 +299,71 @@ const QuizEngine = ({ type = "quiz" }) => {
         </div>
 
         <aside className="qz-sidebar-layout-vertical">
-          <div className="qz-sidebar-layout-vertical">
-            <div className="qz-numbers-card">
-              <div className="qz-number-grid">
-                {questionNumbers.map((num) => {
-                  const isAnswered = isQuestionAnswered(num);
-                  const isCurrent = num === currentQuestion;
+              <div className="qz-sidebar-right">
+                <div className="qz-numbers-card">
+                  <div className="qz-number-grid">
+                    {questionNumbers.map((num) => {
+                      const isAnswered = isQuestionAnswered(num);
+                      const isCurrent = num === currentQuestion;
 
-                  let numberStatusClass = "num-default";
-                  if (isAnswered) numberStatusClass = "num-answered";
-                  else if (isCurrent) numberStatusClass = "num-current";
+                      let numberStatusClass = "num-default";
+                      if (isAnswered) numberStatusClass = "num-answered";
+                      else if (isCurrent) numberStatusClass = "num-current";
 
-                  return (
-                    <div
-                      key={num}
-                      className={`qz-number-item qz-num-item-flex ${numberStatusClass} ${isEnding ? "qz-freeze-opacity" : ""}`}
-                      onClick={() => !isEnding && setCurrentQuestion(num)}
+                      return (
+                        <div
+                          key={num}
+                          className={`qz-number-item qz-num-item-flex ${numberStatusClass} ${isEnding ? "qz-freeze-opacity" : ""}`}
+                          onClick={() => !isEnding && setCurrentQuestion(num)}
+                        >
+                          {num}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="qz-sidebar-bottom-actions">
+                  <div className="qz-sidebar-nav-btn-container">
+                    <button
+                      className={`qz-nav-btn prev ${
+                        currentQuestion === 1 || isLoading || isEnding 
+                          ? "btn-prev-disabled" 
+                          : "btn-prev-active"
+                      }`}
+                      disabled={currentQuestion === 1 || isLoading || isEnding}
+                      onClick={handlePrev}
                     >
-                      {num}
-                    </div>
-                  );
-                })}
+                      <ChevronLeft size={18} />
+                      <span className="qz-nav-btn-text">Previously</span>
+                    </button>
+
+                    <button
+                      className={`qz-nav-btn next ${
+                        selectedOption === null || isLoading || isEnding 
+                          ? "btn-next-disabled" 
+                          : "btn-next-active"
+                      }`}
+                      onClick={handleNext}
+                      disabled={selectedOption === null || isLoading || isEnding}
+                    >
+                      <span className="qz-nav-btn-text">{isLoading ? "Processing..." : "Next"}</span>
+                      {!isLoading && <ChevronRight size={18} />}
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={handleEndSession}
+                    disabled={isEnding}
+                    className={`qz-btn-submit-action ${
+                      isEnding ? "btn-end-disabled" : "btn-end-active"
+                    }`}
+                  >
+                    <CheckSquare size={18} />
+                    <span>{isEnding ? "Saving Answers..." : "End Practice Session"}</span>
+                  </button>
+                </div>
               </div>
-            </div>
-
-            <div className="qz-sidebar-bottom-actions">
-              <div className="qz-sidebar-nav-btn-container">
-                <button
-                  className={`qz-nav-btn prev ${
-                    currentQuestion === 1 || isLoading || isEnding 
-                      ? "btn-prev-disabled" 
-                      : "btn-prev-active"
-                  }`}
-                  disabled={currentQuestion === 1 || isLoading || isEnding}
-                  onClick={handlePrev}
-                >
-                  <ChevronLeft size={18} />
-                  <span className="qz-nav-btn-text">Sebelumnya</span>
-                </button>
-
-                <button
-                  className={`qz-nav-btn next ${
-                    selectedOption === null || isLoading || isEnding 
-                      ? "btn-next-disabled" 
-                      : "btn-next-active"
-                  }`}
-                  onClick={handleNext}
-                  disabled={selectedOption === null || isLoading || isEnding}
-                >
-                  <span className="qz-nav-btn-text">{isLoading ? "Memproses..." : "Selanjutnya"}</span>
-                  {!isLoading && <ChevronRight size={18} />}
-                </button>
-              </div>
-
-              <button
-                onClick={handleEndSession}
-                disabled={isEnding}
-                className={`qz-btn-submit-action ${
-                  isEnding ? "btn-end-disabled" : "btn-end-active"
-                }`}
-              >
-                <CheckSquare size={18} />
-                <span>{isEnding ? "Menyimpan Jawaban..." : "Akhiri Sesi Latihan"}</span>
-              </button>
-            </div>
-          </div>
         </aside>
       </div>
 
