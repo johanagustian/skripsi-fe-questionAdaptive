@@ -114,6 +114,7 @@ const AbilityTestPage = () => {
                           marginBottom: "12px",
                           lineHeight: "1.6",
                           textAlign: "justify",
+                          fontSize: "16px",
                         }}
                       >
                         {paragraph}

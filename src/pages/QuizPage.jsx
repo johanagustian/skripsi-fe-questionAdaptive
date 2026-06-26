@@ -297,7 +297,6 @@ const QuizEngine = ({ type = "quiz" }) => {
             </div>
           </section>
         </div>
-
         <aside className="qz-sidebar-layout-vertical">
               <div className="qz-sidebar-right">
                 <div className="qz-numbers-card">

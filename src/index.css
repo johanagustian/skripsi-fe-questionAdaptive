@@ -1015,8 +1015,8 @@
    position: fixed;
    flex-direction: column;
    gap: 20px;
-   left: 65%;
-   top: 5%;
+   left: 70%;
+   top: 7%;
 
  }
 
@@ -1321,8 +1321,8 @@
    align-self: flex-start;
    overflow: auto;
    z-index: 1;
-   left: 65%;
-   top: 15%;
+   left: 70%;
+   top: 20%;
  }
 
  .qz-numbers-card {

@@ -148,7 +148,7 @@ const LoginPage = () => {
       {showGuideModal && (
         <div className="login-modal-overlay">
           <div className="login-modal-card">
-            <h2 className="login-modal-title">Petunjuk Ability Test</h2>
+            <h2 className="login-modal-title">Ability Test Instructions</h2>
             <p className="login-modal-text">
               Before entering the main application, you are required to take the
               <strong> Initial Ability Test </strong> first.
@@ -159,7 +159,7 @@ const LoginPage = () => {
               className="btn-register-black login-modal-btn"
               disabled={isGeneratingSoal}
             >
-              {isGeneratingSoal ? "AI Sedang Menyiapkan Tes..." : "Mulai Sekarang"}
+              {isGeneratingSoal ? "AI Sedang Menyiapkan Tes..." : "Starting now"}
             </button>
           </div>
         </div>

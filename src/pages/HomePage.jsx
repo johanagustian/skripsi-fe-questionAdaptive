@@ -60,7 +60,7 @@ const HomePage = () => {
     const file = event.target.files[0];
     if (file) {
       if (file.type === "application/pdf") setUploadedFile(file);
-      else alert("Silakan unggah dokumen dengan format PDF!");
+      else alert("Please upload a document in PDF format!");
     }
   };
 
@@ -78,7 +78,7 @@ const HomePage = () => {
     try {
       setIsGeneratingQuiz(true);
       setLoadingProgress(0);
-      setLoadingStatus("Membaca file PDF...");
+      setLoadingStatus("Reading PDF file...");
       
       // Simulasi progress stages
       const progressInterval = setInterval(() => {
@@ -93,15 +93,15 @@ const HomePage = () => {
       
       // Update status berdasarkan progress
       const statusTimer = setTimeout(() => {
-        setLoadingStatus("Mengekstrak teks dari dokumen...");
+        setLoadingStatus("Extracting text from the document...");
       }, 1000);
       
       const statusTimer2 = setTimeout(() => {
-        setLoadingStatus("AI sedang merumuskan soal...");
+        setLoadingStatus("AI is generating questions...");
       }, 2500);
       
       const statusTimer3 = setTimeout(() => {
-        setLoadingStatus("Hampir selesai, menyiapkan sesi...");
+        setLoadingStatus("Almost done, preparing session...");
       }, 4000);
       
       const response = await uploadDocumentAndGenerate(uploadedFile);
@@ -112,7 +112,7 @@ const HomePage = () => {
       clearTimeout(statusTimer3);
       
       setLoadingProgress(100);
-      setLoadingStatus("Selesai! Mengalihkan...");
+      setLoadingStatus("Done! Redirecting...");
       
       setTimeout(() => {
         navigate("/quiz", { state: { quizData: response.data } });
@@ -120,7 +120,7 @@ const HomePage = () => {
       
     } catch (error) {
       console.error("Error:", error);
-      alert("Terjadi kesalahan saat memproses dokumen: " + error.message);
+      alert("An error occurred while processing the document:" + error.message);
       setIsGeneratingQuiz(false);
       setLoadingProgress(0);
     } finally {
@@ -173,7 +173,7 @@ const HomePage = () => {
       <main className="hp-container">
         <header className="hp-header-card">
           <span className="hp-welcome">Hallo...</span>
-          <h1 className="hp-user-name">{username || "Memuat..."}</h1>
+          <h1 className="hp-user-name">{username || "Loading..."}</h1>
           <p className="hp-subtitle">Are you ready to practice today?</p>
         </header>
 
