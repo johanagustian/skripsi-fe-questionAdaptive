@@ -35,19 +35,30 @@ const RegisterPage = () => {
 
         if (password !== confirmPass) {
             return setMessage({
-                text: 'Pastikan konfirmasi password sama dengan password',
+                text: 'Password confirmation must match the password',
                 type: 'error'
             });
         }
 
         try {
-            setMessage({ text: 'Memproses...', type: 'alert' });
+            setMessage({ 
+                text: 'Processing...', 
+                type: 'alert' 
+            });
+
             await registry({ full_name, email, password });
-            setMessage({ text: 'Pendaftaran berhasil', type: 'success' });
-            navigate("/login");
+
+            setMessage({ 
+                text: 'Registration successful', 
+                type: 'success' 
+            });
+
+            setTimeout(() => {
+                navigate("/login");
+            }, 2000);
         } catch (err) {
             setMessage({
-                text: err.message || 'Terjadi kesalahan',
+                text: err.message || 'An error occurred',
                 type: 'error'
             });
         }
