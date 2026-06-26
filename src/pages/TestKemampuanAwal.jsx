@@ -72,96 +72,95 @@ const AbilityTestPage = () => {
       : currentQuiz.options;
 
   return (
-    <div className="qz-page-wrapper at-wrapper">
-      <div className="qz-content-container">
+    <div className="at-page-wrapper">
+      <div className="at-content-container">
         {/* Konten Kiri (Teks Bacaan & Soal) */}
-        <div className="qz-main-content">
-            <article className="qz-context-card">
-              {/* 1. KOTAK BADGE LEVEL DAN JUDUL YANG SUDAH DISAMAKAN DENNGAN QUIZ */}
-              <div className="qz-header-row">
-                <h2 className="qz-context-title" style={{ margin: 0 }}>
-                  English Reading Comprehension
-                </h2>
-                <span className="qz-difficulty-badge">
-                  Level : {currentQuiz.difficulty.toUpperCase()}
-                </span>
-              </div>
+        <div className="at-main-content">
+          <article className="at-context-card">
+            <div className="at-header-row">
+              <h2 className="at-context-title" style={{ margin: 0 }}>
+                English Reading Comprehension
+              </h2>
+              <span className="at-difficulty-badge">
+                Level : {currentQuiz.difficulty.toUpperCase()}
+              </span>
+            </div>
 
-              <div className="qz-context-body">
-                <p
-                  className="at-note-text"
-                  style={{
-                    marginBottom: "16px",
-                    fontStyle: "italic",
-                    fontSize: "13px",
-                    color: "#64748b",
-                  }}
-                >
-                  * <b>Instructions:</b> Please read the text below. You are
-                  free to skip questions, but{" "}
-                  <b>all {questions.length} questions must be answered</b> to
-                  complete the test.
-                </p>
+            <div className="at-context-body">
+              <p
+                className="at-note-text"
+                style={{
+                  marginBottom: "16px",
+                  fontStyle: "italic",
+                  fontSize: "13px",
+                  color: "#64748b",
+                }}
+              >
+                * <b>Instructions:</b> Please read the text below. You are
+                free to skip questions, but{" "}
+                <b>all {questions.length} questions must be answered</b> to
+                complete the test.
+              </p>
 
-                {/* 2. MENGGUNAKAN qz-reading-box AGAR LATAR BELAKANG ABU-ABU DAN BORDER BIRU MUNCUL KONSISTEN */}
-                <div className="qz-reading-box at-context-body-scroll">
-                  <div className="context-reading-text">
-                    {readingContext.split("\n").map((paragraph, index) => {
-                      if (paragraph.trim() === "") return null;
-                      return (
-                        <p
-                          key={index}
-                          style={{
-                            margin: 0,
-                            marginBottom: "12px",
-                            lineHeight: "1.6",
-                            textAlign: "justify",
-                          }}
-                        >
-                          {paragraph}
-                        </p>
-                      );
-                    })}
-                  </div>
+              <div className="at-reading-box at-context-body-scroll">
+                <div className="at-context-reading-text">
+                  {readingContext.split("\n").map((paragraph, index) => {
+                    if (paragraph.trim() === "") return null;
+                    return (
+                      <p
+                        key={index}
+                        style={{
+                          margin: 0,
+                          marginBottom: "12px",
+                          lineHeight: "1.6",
+                          textAlign: "justify",
+                        }}
+                      >
+                        {paragraph}
+                      </p>
+                    );
+                  })}
                 </div>
               </div>
-            </article>
+            </div>
+          </article>
 
-            <section className="qz-question-section">
-              <p className="qz-question-text at-question-text-bold">
-                {currentQuiz.question_text}
-              </p>
-              <div className="qz-options-list">
-                {currentOptions.map((option, index) => {
-                  const isSelected = answers[currentQuestion] === index;
-                  return (
+          <section className="at-question-section">
+            <p className="at-question-text at-question-text-bold">
+              {currentQuiz.question_text}
+            </p>
+            <div className="at-options-list">
+              {currentOptions.map((option, index) => {
+                const isSelected = answers[currentQuestion] === index;
+                return (
+                  <div
+                    key={index}
+                    onClick={() => handleSelectOption(index)}
+                    className={`at-option-item at-option-clickable ${isSelected ? "active" : ""}`}
+                  >
+                    <input
+                      type="radio"
+                      name={`test-question-${currentQuestion}`}
+                      checked={isSelected}
+                      readOnly
+                    />
                     <div
-                      key={index}
-                      onClick={() => handleSelectOption(index)}
-                      className={`qz-option-item at-option-clickable ${isSelected ? "active" : ""}`}
-                    >
-                      <input
-                        type="radio"
-                        name={`test-question-${currentQuestion}`}
-                        checked={isSelected}
-                        readOnly
-                      />
-                      <div
-                        className={`qz-radio-circle ${isSelected ? "active" : ""}`}
-                      />
-                      <span className="qz-option-label">{option}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
+                      className={`at-radio-circle ${isSelected ? "active" : ""}`}
+                    />
+                    <span className="at-option-label">{option}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
         </div>
+        
 
         {/* Sidebar Kanan (Navigasi Nomor) */}
-        <aside className="qz-sidebar-layout-vertical">
-          <div className="qz-sidebar-sticky-wrapper">
-            <div className="qz-numbers-card">
-              <div className="qz-number-grid">
+        <aside className="at-sidebar-layout-vertical">
+          <div className="at-sidebar-sticky-wrapper">
+            <div className="at-numbers-card">
+              <div className="at-number-grid">
                 {questions.map((q, idx) => {
                   const qNumber = idx + 1;
                   const isAnswered = answers[qNumber] !== undefined;
@@ -174,7 +173,7 @@ const AbilityTestPage = () => {
                   return (
                     <div
                       key={q.item_id}
-                      className={`qz-number-item qz-num-item-flex at-option-clickable ${testNumStatus}`}
+                      className={`at-number-item at-num-item-flex at-option-clickable ${testNumStatus}`}
                       onClick={() => setCurrentQuestion(qNumber)}
                     >
                       {qNumber}
@@ -187,18 +186,18 @@ const AbilityTestPage = () => {
             <div className="at-sidebar-nav-container">
               <div className="at-btn-flex-row">
                 <button
-                  className={`qz-nav-btn prev ${currentQuestion === 1 ? "btn-prev-disabled" : "btn-prev-active"}`}
+                  className={`at-nav-btn prev ${currentQuestion === 1 ? "btn-prev-disabled" : "btn-prev-active"}`}
                   disabled={currentQuestion === 1}
                   onClick={() =>
                     setCurrentQuestion((prev) => Math.max(1, prev - 1))
                   }
                 >
                   <ChevronLeft size={18} />
-                  <span className="qz-nav-btn-text">Previously</span>
+                  <span className="at-nav-btn-text">Previously</span>
                 </button>
 
                 <button
-                  className={`qz-nav-btn next ${isNextDisabled ? "btn-next-disabled" : "btn-next-active"}`}
+                  className={`at-nav-btn next ${isNextDisabled ? "btn-next-disabled" : "btn-next-active"}`}
                   disabled={isNextDisabled || isSubmitting}
                   onClick={() => {
                     if (currentQuestion === questions.length) {
@@ -210,7 +209,7 @@ const AbilityTestPage = () => {
                     }
                   }}
                 >
-                  <span className="qz-nav-btn-text">
+                  <span className="at-nav-btn-text">
                     {isSubmitting
                       ? "Processing..."
                       : currentQuestion === questions.length
@@ -262,7 +261,7 @@ const AbilityTestPage = () => {
             </p>
             <button
               onClick={() => navigate("/home")}
-              className="btn-login-black at-modal-submit-btn"
+              className="at-modal-submit-btn-black"
             >
               Go to Home Page
             </button>
