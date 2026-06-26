@@ -9,7 +9,7 @@ const LoginPage = () => {
 
   const [showGuideModal, setShowGuideModal] = useState(false);
   const [isGeneratingSoal, setIsGeneratingSoal] = useState(false);
-  const [showPass, setShowPass] = useState(false); // State baru untuk kontrol toggle password
+  const [showPass, setShowPass] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -33,7 +33,10 @@ const LoginPage = () => {
       await checkUserStatus();
       return true;
     } catch (error) {
-      if (error.message.includes("sudah pernah") || error.message.includes("403")) {
+      if (
+        error.message.includes("already completed") ||
+        error.message.includes("403")
+      ) {
         return false;
       }
       throw error;
@@ -45,19 +48,28 @@ const LoginPage = () => {
     const { email, password } = formData;
 
     try {
-      setMessage({ text: "Memproses...", type: "alert" });
+      setMessage({
+        text: "Processing...",
+        type: "alert",
+      });
+
       await login({ email, password });
+
       const needsAbilityTest = await checkIfNeedsAbilityTest();
 
       if (needsAbilityTest) {
         setShowGuideModal(true);
       } else {
-        setMessage({ text: "Login berhasil", type: "success" });
+        setMessage({
+          text: "Login successful",
+          type: "success",
+        });
         navigate("/home");
       }
     } catch (err) {
       setMessage({
-        text: err.message || "Login gagal, periksa kembali email dan kata sandimu.",
+        text:
+          err.message || "Login failed. Please check your email and password.",
         type: "error",
       });
     }
@@ -72,7 +84,7 @@ const LoginPage = () => {
         state: { testData: testResponse.data },
       });
     } catch (err) {
-      alert("Gagal menyiapkan soal ujian: " + error.message);
+      alert("Failed to prepare test questions: " + err.message);
     } finally {
       setIsGeneratingSoal(false);
     }
@@ -148,10 +160,16 @@ const LoginPage = () => {
       {showGuideModal && (
         <div className="login-modal-overlay">
           <div className="login-modal-card">
-            <h2 className="login-modal-title">Ability Test Instructions</h2>
+            <h2 className="login-modal-title">Initial Ability Test</h2>
+
             <p className="login-modal-text">
-              Before entering the main application, you are required to take the
-              <strong> Initial Ability Test </strong> first.
+              To continue, please complete the{" "}
+              <strong>Initial Ability Test</strong>. Your results will help the
+              system provide a more personalized learning experience.
+            </p>
+
+            <p className="login-modal-text">
+              The test takes only a few minutes to complete.
             </p>
 
             <button
@@ -159,7 +177,7 @@ const LoginPage = () => {
               className="btn-register-black login-modal-btn"
               disabled={isGeneratingSoal}
             >
-              {isGeneratingSoal ? "AI Sedang Menyiapkan Tes..." : "Starting now"}
+              {isGeneratingSoal ? "AI Sedang Menyiapkan Tes..." : "Mulai Sekarang"}
             </button>
           </div>
         </div>
