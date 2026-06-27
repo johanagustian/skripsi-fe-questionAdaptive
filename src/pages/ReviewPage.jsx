@@ -59,9 +59,17 @@ const ReviewPage = () => {
             <h2 className="qz-context-title">
               Reading Context
             </h2>
-            <span className="qz-difficulty-badge">
-              Level: {currentQuiz.difficulty_level?.toUpperCase()}
-            </span>
+            <div className="rv-context-info">
+              <span className="rv-current-theta">
+                Theta Score (<i>θ</i>) : {currentQuiz.theta_score}
+              </span>
+              <span className="rv-current-ability">
+                Ability (<i>b</i>) : {currentQuiz.b_parameter}
+              </span>
+              <span className={`rv-difficulty-badge ${currentQuiz.difficulty_level?.toLowerCase()}`}>
+                Level : {currentQuiz.difficulty_level?.toUpperCase()}
+              </span>
+            </div>
           </div>
 
           <div className="qz-context-body">
@@ -175,9 +183,7 @@ const ReviewPage = () => {
               Back to Practice History
             </button>
           </div>
-
         </div> 
-
       </main>
       <LogoutOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>

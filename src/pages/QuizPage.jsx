@@ -8,11 +8,13 @@ const QuizEngine = ({ type = "quiz" }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const initData = location.state?.quizData;
-  
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sessionId] = useState(initData?.session_id);
   const [documentId] = useState(initData?.document_id);
-  const [questionsList, setQuestionsList] = useState(initData ? [initData] : []);
+  const [questionsList, setQuestionsList] = useState(
+    initData ? [initData] : [],
+  );
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [selectedOption, setSelectedOption] = useState(null);
   const [answersHistory, setAnswersHistory] = useState({});
@@ -45,20 +47,25 @@ const QuizEngine = ({ type = "quiz" }) => {
   useEffect(() => {
     const handlePopState = (event) => {
       if (isBackNavigationHandled.current) return;
-      
+
       const hasUnsubmittedAnswers = Object.keys(selectedFlags).length > 0;
       const hasSelectedCurrent = selectedOption !== null && !isPastQuestion();
-      const hasAnyAnswer = hasUnsubmittedAnswers || hasSelectedCurrent || Object.keys(answersHistory).length > 0;
-      
+      const hasAnyAnswer =
+        hasUnsubmittedAnswers ||
+        hasSelectedCurrent ||
+        Object.keys(answersHistory).length > 0;
+
       let message = "";
       if (hasAnyAnswer) {
-        message = "You have selected answers.\n\nAre you sure you want to leave this practice session?\n\n⚠️ WARNING:\n• Submitted answers will remain saved\n• Unsubmitted answers will be LOST\n• Your final score will not be calculated if you leave now\n\nClick 'OK' to leave or 'Cancel' to continue.";
+        message =
+          "You have selected answers.\n\nAre you sure you want to leave this practice session?\n\n⚠️ WARNING:\n• Submitted answers will remain saved\n• Unsubmitted answers will be LOST\n• Your final score will not be calculated if you leave now\n\nClick 'OK' to leave or 'Cancel' to continue.";
       } else {
-        message = "You have not answered any questions yet.\n\nAre you sure you want to leave this practice session?\n\nThis session will end and you will need to start over.\n\nClick 'OK' to leave or 'Cancel' to continue.";
+        message =
+          "You have not answered any questions yet.\n\nAre you sure you want to leave this practice session?\n\nThis session will end and you will need to start over.\n\nClick 'OK' to leave or 'Cancel' to continue.";
       }
-      
+
       const isConfirmed = window.confirm(message);
-      
+
       if (!isConfirmed) {
         isBackNavigationHandled.current = true;
         window.history.pushState(null, "", window.location.href);
@@ -67,16 +74,16 @@ const QuizEngine = ({ type = "quiz" }) => {
         }, 500);
         return;
       }
-      
+
       isBackNavigationHandled.current = true;
       setTimeout(() => {
         isBackNavigationHandled.current = false;
       }, 500);
     };
-    
+
     window.history.pushState(null, "", window.location.href);
     window.addEventListener("popstate", handlePopState);
-    
+
     return () => {
       window.removeEventListener("popstate", handlePopState);
     };
@@ -97,15 +104,15 @@ const QuizEngine = ({ type = "quiz" }) => {
   const isPastQuestion = () => currentQuestion < questionsList.length;
 
   if (questionsList.length === 0)
-    return (
-      <div className="p-10 text-center">Loading questions...</div>
-    );
+    return <div className="p-10 text-center">Loading questions...</div>;
 
   const currentQuestionData = questionsList[currentQuestion - 1];
-  
+
   const activeOptionToShow = isPastQuestion()
     ? answersHistory[currentQuestion]
-    : (selectedOption !== null ? selectedOption : null);
+    : selectedOption !== null
+      ? selectedOption
+      : null;
 
   const currentOptions =
     typeof currentQuestionData.options === "string"
@@ -121,7 +128,7 @@ const QuizEngine = ({ type = "quiz" }) => {
   const handleSelectOption = (index) => {
     if (isPastQuestion()) return;
     if (isEnding) return;
-    
+
     setSelectedOption(index);
     setSelectedFlags((prev) => ({
       ...prev,
@@ -158,7 +165,7 @@ const QuizEngine = ({ type = "quiz" }) => {
         ...prev,
         [currentQuestion]: selectedOption,
       }));
-      
+
       setSelectedFlags((prev) => {
         const newFlags = { ...prev };
         delete newFlags[currentQuestion];
@@ -169,6 +176,8 @@ const QuizEngine = ({ type = "quiz" }) => {
         session_id: sessionId,
         document_id: documentId,
       });
+
+      console.log("Next question response:", nextQResponse);
 
       setQuestionsList((prev) => [...prev, nextQResponse.data]);
       setCurrentQuestion((prev) => prev + 1);
@@ -183,63 +192,69 @@ const QuizEngine = ({ type = "quiz" }) => {
 
   const handleEndSession = async () => {
     if (isEnding) return;
-    
+
     const hasUnsubmittedAnswers = Object.keys(selectedFlags).length > 0;
     const hasSubmittedAnswers = Object.keys(answersHistory).length > 0;
-    
+
     let message = "";
     if (hasUnsubmittedAnswers) {
-      message = "You have unsubmitted answers.\n\nAre you sure you want to end this practice session?\n\nYour score and ability evaluation (Theta) will be calculated shortly.";
+      message =
+        "You have unsubmitted answers.\n\nAre you sure you want to end this practice session?\n\nYour score and ability evaluation (Theta) will be calculated shortly.";
     } else if (hasSubmittedAnswers) {
-      message = "Are you sure you want to end this practice session?\n\nYour score and ability evaluation (Theta) will be calculated immediately.";
+      message =
+        "Are you sure you want to end this practice session?\n\nYour score and ability evaluation (Theta) will be calculated immediately.";
     } else {
-      message = "This session is still empty. Leaving now will permanently cancel this session. Are you sure?";
+      message =
+        "This session is still empty. Leaving now will permanently cancel this session. Are you sure?";
     }
-    
+
     const isConfirmed = window.confirm(message);
     if (!isConfirmed) return;
-    
+
     setIsEnding(true);
-    
+
     try {
       const indexToLetter = { 0: "A", 1: "B", 2: "C", 3: "D" };
       const unsubmittedQuestions = Object.keys(selectedFlags);
-      
+
       for (const qNum of unsubmittedQuestions) {
         const questionIndex = parseInt(qNum);
         const questionData = questionsList[questionIndex - 1];
         const selectedOpt = selectedFlags[questionIndex];
-        
+
         if (questionData && selectedOpt !== undefined) {
           await submitSessionAnswer({
             session_id: sessionId,
             question_id: questionData.question_id,
             user_answer: indexToLetter[selectedOpt],
           });
-          
+
           setAnswersHistory((prev) => ({
             ...prev,
             [questionIndex]: selectedOpt,
           }));
         }
       }
-      
-      if (!isPastQuestion() && selectedOption !== null && selectedFlags[currentQuestion] === undefined) {
+
+      if (
+        !isPastQuestion() &&
+        selectedOption !== null &&
+        selectedFlags[currentQuestion] === undefined
+      ) {
         await submitSessionAnswer({
           session_id: sessionId,
           question_id: currentQuestionData.question_id,
           user_answer: indexToLetter[selectedOption],
         });
-        
+
         setAnswersHistory((prev) => ({
           ...prev,
           [currentQuestion]: selectedOption,
         }));
       }
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
       navigate(`/sessions/${sessionId}/summary`);
-      
     } catch (error) {
       alert("Failed to save answers: " + error.message);
       setIsEnding(false);
@@ -249,39 +264,45 @@ const QuizEngine = ({ type = "quiz" }) => {
   return (
     <div className="qz-page-wrapper">
       <div className="qz-content-container">
-        
         <article ref={readingContextRef} className="qz-context-card">
           <div className="qz-header-row">
             <h2 className="qz-context-title" style={{ margin: 0 }}>
               Reading Context
             </h2>
-            <span className="qz-difficulty-badge">
-              Level: {currentQuestionData.difficulty_level?.toUpperCase()}
-            </span>
-            
+            <div className="qz-context-info">
+              <span className="qz-current-theta">
+                Theta (<i>θ</i>) : {Number(currentQuestionData.current_theta).toFixed(2)}
+              </span>
+              <span className="qz-current-ability">
+                Ability (<i>b</i>) : {currentQuestionData.b_parameter}
+              </span>
+              <span className={`qz-difficulty-badge ${currentQuestionData.difficulty_level?.toLowerCase()}`}>
+                Level: {currentQuestionData.difficulty_level?.toUpperCase()} 
+              </span>
+            </div>
           </div>
 
           <div className="qz-context-body">
             {isPastQuestion() ? (
               <p className="qz-review-mode-warning">
-                *Review Mode: You are currently viewing a previous question. Your answer is permanently locked.
+                *Review Mode: You are currently viewing a previous question.
+                Your answer is permanently locked.
               </p>
             ) : (
               <p className="qz-adaptive-mode-info">
-                *Adaptive System: AI continuously adjusts the difficulty level. You can end the session at any time.
+                *Adaptive System: AI continuously adjusts the difficulty level.
+                You can end the session at any time.
               </p>
             )}
 
             <div ref={readingBoxRef} className="qz-reading-box">
               {currentQuestionData.reading_context ? (
-                currentQuestionData.reading_context.split("\n").map((paragraph, index) => {
-                  if (paragraph.trim() === "") return null;
-                  return (
-                    <p key={index}>
-                      {paragraph}
-                    </p>
-                  );
-                })
+                currentQuestionData.reading_context
+                  .split("\n")
+                  .map((paragraph, index) => {
+                    if (paragraph.trim() === "") return null;
+                    return <p key={index}>{paragraph}</p>;
+                  })
               ) : (
                 <p>No reading text available.</p>
               )}
@@ -290,7 +311,6 @@ const QuizEngine = ({ type = "quiz" }) => {
         </article>
 
         <div className="qz-bottom-layout-wrapper">
-          
           <section className="qz-question-section">
             <p className="qz-question-text">
               {currentQuestionData.question_text}
@@ -305,17 +325,23 @@ const QuizEngine = ({ type = "quiz" }) => {
                     onClick={() => handleSelectOption(index)}
                     className={`qz-option-item ${isSelected ? "active" : ""}`}
                     style={{
-                      cursor: isPastQuestion() || isEnding ? "not-allowed" : "pointer",
-                      opacity: (isPastQuestion() || isEnding) && !isSelected ? 0.6 : 1,
+                      cursor:
+                        isPastQuestion() || isEnding
+                          ? "not-allowed"
+                          : "pointer",
+                      opacity:
+                        (isPastQuestion() || isEnding) && !isSelected ? 0.6 : 1,
                     }}
                   >
-                    <input 
-                      type="radio" 
-                      name={`question-${currentQuestion}`} 
-                      checked={isSelected} 
-                      readOnly 
+                    <input
+                      type="radio"
+                      name={`question-${currentQuestion}`}
+                      checked={isSelected}
+                      readOnly
                     />
-                    <div className={`qz-radio-circle ${isSelected ? "active" : ""}`} />
+                    <div
+                      className={`qz-radio-circle ${isSelected ? "active" : ""}`}
+                    />
                     <span className="qz-option-label">{option}</span>
                   </div>
                 );
@@ -357,8 +383,8 @@ const QuizEngine = ({ type = "quiz" }) => {
                 <div className="qz-sidebar-nav-btn-container">
                   <button
                     className={`qz-nav-btn prev ${
-                      currentQuestion === 1 || isLoading || isEnding 
-                        ? "btn-prev-disabled" 
+                      currentQuestion === 1 || isLoading || isEnding
+                        ? "btn-prev-disabled"
                         : "btn-prev-active"
                     }`}
                     disabled={currentQuestion === 1 || isLoading || isEnding}
@@ -370,14 +396,16 @@ const QuizEngine = ({ type = "quiz" }) => {
 
                   <button
                     className={`qz-nav-btn next ${
-                      selectedOption === null || isLoading || isEnding 
-                        ? "btn-next-disabled" 
+                      selectedOption === null || isLoading || isEnding
+                        ? "btn-next-disabled"
                         : "btn-next-active"
                     }`}
                     onClick={handleNext}
                     disabled={selectedOption === null || isLoading || isEnding}
                   >
-                    <span className="qz-nav-btn-text">{isLoading ? "Processing..." : "Next"}</span>
+                    <span className="qz-nav-btn-text">
+                      {isLoading ? "Processing..." : "Next"}
+                    </span>
                     {!isLoading && <ChevronRight size={18} />}
                   </button>
                 </div>
@@ -390,14 +418,14 @@ const QuizEngine = ({ type = "quiz" }) => {
                   }`}
                 >
                   <CheckSquare size={18} />
-                  <span>{isEnding ? "Saving Answers..." : "End Practice Session"}</span>
+                  <span>
+                    {isEnding ? "Saving Answers..." : "End Practice Session"}
+                  </span>
                 </button>
               </div>
             </div>
           </aside>
-
         </div>
-
       </div>
       <LogoutOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>

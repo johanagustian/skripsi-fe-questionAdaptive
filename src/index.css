@@ -3212,13 +3212,60 @@
    color: #1e293b;
  }
 
- .qz-difficulty-badge {
-   font-size: 12px;
-   background: #e2e8f0;
-   padding: 4px 8px;
-   border-radius: 4px;
-   font-weight: bold;
- }
+ .qz-context-info,
+ .at-context-info,
+ .rv-context-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 8px 8px;
+  /* margin-bottom: 16px; */
+
+  background: #f1f5f9;
+  border: 1px solid #dbe4ee;
+  border-radius: 8px;
+
+  font-size: 13px;
+}
+
+.qz-current-theta,
+.qz-current-score,
+.at-current-ability,
+.rv-current-score,
+.rv-current-theta {
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+}
+
+.qz-difficulty-badge,
+.at-difficulty-badge,
+.rv-difficulty-badge {
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* MIDDLE */
+.qz-difficulty-badge.middle,
+.at-difficulty-badge.middle,
+.rv-difficulty-badge.middle {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+/* HIGH */
+.qz-difficulty-badge.high,
+.at-difficulty-badge.high,
+.rv-difficulty-badge.high {
+  background: #dcfce7;
+  color: #15803d;
+}
 
  .qz-review-mode-warning {
    font-style: italic;

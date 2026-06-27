@@ -96,9 +96,15 @@ const AbilityTestPage = () => {
             <h2 className="at-context-title" style={{ margin: 0 }}>
               English Reading Comprehension
             </h2>
-            <span className="at-difficulty-badge">
-              Level : {currentQuiz.difficulty.toUpperCase()}
-            </span>
+            <div className="at-context-info">
+              <span className="at-current-ability">
+                Ability (<i>b</i>) : {currentQuiz.b_parameter}
+              </span>
+              <span className={`at-difficulty-badge ${currentQuiz.difficulty.toLowerCase()}`}>
+                Level : {currentQuiz.difficulty.toUpperCase()}
+              </span>
+            </div>
+            
           </div>
 
           <div className="at-context-body">
