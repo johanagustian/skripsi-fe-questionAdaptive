@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react"; // Tambahkan impor ikon mata
+import { useNavigate } from "react-router-dom";
 import logoIcon from "../assets/boy2.jpg";
 import { login, checkUserStatus, startAbilityTest } from "../../utils/api";
 
@@ -9,7 +8,6 @@ const LoginPage = () => {
 
   const [showGuideModal, setShowGuideModal] = useState(false);
   const [isGeneratingSoal, setIsGeneratingSoal] = useState(false);
-  const [showPass, setShowPass] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -33,10 +31,7 @@ const LoginPage = () => {
       await checkUserStatus();
       return true;
     } catch (error) {
-      if (
-        error.message.includes("already completed") ||
-        error.message.includes("403")
-      ) {
+      if (error.message.includes("sudah pernah") || error.message.includes("403")) {
         return false;
       }
       throw error;
@@ -48,28 +43,19 @@ const LoginPage = () => {
     const { email, password } = formData;
 
     try {
-      setMessage({
-        text: "Processing...",
-        type: "alert",
-      });
-
+      setMessage({ text: "Processing...", type: "alert" });
       await login({ email, password });
-
       const needsAbilityTest = await checkIfNeedsAbilityTest();
 
       if (needsAbilityTest) {
         setShowGuideModal(true);
       } else {
-        setMessage({
-          text: "Login successful",
-          type: "success",
-        });
+        setMessage({ text: "Login Successful", type: "success" });
         navigate("/home");
       }
     } catch (err) {
       setMessage({
-        text:
-          err.message || "Login failed. Please check your email and password.",
+        text: err.message || "Login failed. Please check your email and password.",
         type: "error",
       });
     }
@@ -84,7 +70,7 @@ const LoginPage = () => {
         state: { testData: testResponse.data },
       });
     } catch (err) {
-      alert("Failed to prepare test questions: " + err.message);
+      alert("Failed to prepare the test questions: " + err.message);
     } finally {
       setIsGeneratingSoal(false);
     }
@@ -109,7 +95,7 @@ const LoginPage = () => {
 
             <form onSubmit={handleLogin}>
               <div className="input-group">
-                <label>Email</label>
+                <label>Enter Email</label>
                 <input
                   type="email"
                   name="email"
@@ -121,36 +107,34 @@ const LoginPage = () => {
               </div>
 
               <div className="input-group">
-                <label>Password</label>
-                {/* Dibungkus dengan password-wrapper agar posisi ikon mata berada di dalam input box */}
-                <div className="password-wrapper">
-                  <input
-                    type={showPass ? "text" : "password"} // Tipe berubah dinamis berdasarkan state
-                    name="password"
-                    placeholder="Enter Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() => setShowPass(!showPass)}
-                  >
-                    {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
-                </div>
+                <label>Enter Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Enter Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <button type="submit" className="btn-login-black">
-                Login
+                Masuk
               </button>
             </form>
 
             <div className="signup-footer">
               <p>
-                don't have an account yet?{" "}
-                <Link to="/register">Register here</Link>
+                Don't have an account?{" "}
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/register");
+                  }}
+                >
+                  Register now
+                </a>
               </p>
             </div>
           </div>
@@ -160,16 +144,11 @@ const LoginPage = () => {
       {showGuideModal && (
         <div className="login-modal-overlay">
           <div className="login-modal-card">
-            <h2 className="login-modal-title">Initial Ability Test</h2>
-
+            <h2 className="login-modal-title">Ability Test Instructions</h2>
             <p className="login-modal-text">
-              To continue, please complete the{" "}
-              <strong>Initial Ability Test</strong>. Your results will help the
-              system provide a more personalized learning experience.
-            </p>
-
-            <p className="login-modal-text">
-              The test takes only a few minutes to complete.
+              Before accessing the main application, you are required to take the
+              <strong> Initial Ability Assessment </strong>
+              first.
             </p>
 
             <button
@@ -177,7 +156,7 @@ const LoginPage = () => {
               className="btn-register-black login-modal-btn"
               disabled={isGeneratingSoal}
             >
-              {isGeneratingSoal ? "AI Sedang Menyiapkan Tes..." : "Mulai Sekarang"}
+              {isGeneratingSoal ? "AI is Preparing the Test..." : "Start Now"}
             </button>
           </div>
         </div>
