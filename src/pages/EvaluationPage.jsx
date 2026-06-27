@@ -89,7 +89,7 @@ const EvaluationPage = () => {
         }
         setChartData(formattedChartData);
       } catch (error) {
-        alert("Gagal memuat hasil evaluasi: " + error.message);
+        alert("Failed to load evaluation results:" + error.message);
         navigate("/home");
       } finally {
         setIsLoading(false);

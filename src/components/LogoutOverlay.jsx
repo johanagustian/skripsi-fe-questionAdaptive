@@ -31,8 +31,8 @@ const Navbar = () => {
         const formatTheta = theta_score.toFixed(2);
         setUserName(name);
 
-        if (formatTheta >= 0.5){
-          setUserLevel(`Level: Hight (${formatTheta})`);
+        if (formatTheta >= 0){
+          setUserLevel(`Level: High (${formatTheta})`);
         } else{
           setUserLevel(`Level: Middle (${formatTheta})`);
         }

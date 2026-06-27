@@ -865,11 +865,7 @@
    ADDED SYSTEM CUSTOM STYLES FOR ABILITYTESTPAGE (MAPPING DARI QZ STYLES)
    ========================================================================== */
 
- .at-page-wrapper {
-   min-height: 100vh;
-   background: var(--bg-light);
- }
-
+ /* 
  .at-content-container {
    max-width: 1250px;
    margin: 0 auto;
@@ -923,8 +919,8 @@
    padding: 16px;
    border-radius: 8px;
    border-left: 4px solid #3b82f6;
- }
-
+ } */
+ /* 
  .at-context-body-scroll {
    max-height: 250px;
    overflow-y: auto;
@@ -963,10 +959,10 @@
 
  .at-option-item.active {
    background: transparent;
- }
+ } */
 
  /* Fix radio button kustom agar seragam */
- .at-option-item input[type="radio"] {
+ /* .at-option-item input[type="radio"] {
    position: absolute;
    opacity: 0;
    width: 0;
@@ -1003,76 +999,12 @@
    background: #3b82f6;
  }
 
- .at-option-label {
-   font-size: 15px;
-   color: #334155;
- }
-
- /* Sidebar Navigasi Kanan */
- .at-sidebar-layout-vertical {
-   width: 320px;
-   display: flex;
-   position: fixed;
-   flex-direction: column;
-   gap: 20px;
-   left: 65%;
-   top: 5%;
-
- }
-
- .at-sidebar-sticky-wrapper {
-   display: flex;
-   flex-direction: column;
-   gap: 20px;
- }
-
- .at-numbers-card {
-   background: white;
-   padding: 25px;
-   border-radius: 10px;
-   box-shadow: var(--shadow-sm);
-   border: 1px solid #e2e8f0;
- }
-
- .at-number-grid {
-   display: grid;
-   grid-template-columns: repeat(4, 1fr);
-   gap: 12px;
- }
-
- .at-number-item {
-   aspect-ratio: 1;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   border-radius: 6px;
-   font-weight: 700;
-   cursor: pointer;
- }
-
  .at-num-item-flex {
    display: flex;
    align-items: center;
    justify-content: center;
  }
 
- .at-number-item.num-default {
-   background-color: #ffffff;
-   color: #1e293b;
-   border: 1px solid #e2e8f0;
- }
-
- .at-number-item.num-answered {
-   background-color: #9ca3af;
-   color: #ffffff;
-   border: none;
- }
-
- .at-number-item.num-current {
-   background-color: #3b82f6;
-   color: #ffffff;
-   border: none;
- }
 
  .at-sidebar-nav-container {
    display: flex;
@@ -1128,88 +1060,6 @@
    border: none;
  }
 
- .at-error-progress-text {
-   margin-top: 12px;
-   font-size: 13px;
-   color: #e74c3c;
- }
-
- /* Modal Hasil */
- .at-modal-overlay {
-   position: fixed;
-   top: 0;
-   left: 0;
-   right: 0;
-   bottom: 0;
-   background-color: rgba(0, 0, 0, 0.6);
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   z-index: 9999;
-   padding: 20px;
- }
-
- .at-modal-card {
-   background: #fff;
-   padding: 32px;
-   border-radius: 16px;
-   max-width: 420px;
-   width: 100%;
-   text-align: center;
-   display: flex;
-   flex-direction: column;
-   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
- }
-
- .at-modal-title {
-   margin: 0;
-   font-size: 24px;
-   font-weight: 800;
-   color: #2c3e50;
- }
-
- .at-modal-summary-box {
-   margin: 20px 0;
-   padding: 16px;
-   background: #f8f9fa;
-   border-radius: 8px;
- }
-
- .at-modal-text-row {
-   font-size: 16px;
-   margin: 0;
-   color: #34495e;
- }
-
- .at-modal-text-row-margin {
-   font-size: 16px;
-   margin: 0;
-   color: #34495e;
-   margin-bottom: 8px;
- }
-
- .at-modal-desc-muted {
-   font-size: 14px;
-   color: #7f8c8d;
-   margin-bottom: 20px;
- }
-
- .at-modal-submit-btn-black {
-   width: 100%;
-   height: 48px;
-   border: none;
-   border-radius: 10px;
-   background: #2b2b2b;
-   color: #ffffff;
-   font-size: 15px;
-   font-weight: bold;
-   cursor: pointer;
-   transition: background 0.2s ease;
- }
-
- .at-modal-submit-btn-black:hover {
-   background: #3a3a3a;
- }
 
  /* QUIZ */
  .qz-page-wrapper.at-wrapper .qz-content-container {
@@ -1249,15 +1099,6 @@
    margin-bottom: 25px;
    border: 1px solid #e2e8f0;
    box-shadow: var(--shadow-sm);
- }
-
- .qz-context-title {
-   text-align: center;
-   text-decoration: underline;
-   margin-bottom: 20px;
-   font-size: 24px;
-   font-weight: 700;
-   color: #1e293b;
  }
 
  .qz-context-body p {
@@ -1316,26 +1157,10 @@
    display: flex;
    flex-direction: column;
    gap: 20px;
-   position: fixed;
    top: 20px;
    align-self: flex-start;
    overflow: auto;
    z-index: 1;
-   left: 65%;
-   top: 15%;
- }
-
- .qz-numbers-card {
-   background: white;
-   padding: 25px;
-   border-radius: 10px;
-   box-shadow: var(--shadow-sm);
- }
-
- .qz-number-grid {
-   display: grid;
-   grid-template-columns: repeat(4, 1fr);
-   gap: 12px;
  }
 
  .qz-number-item {
@@ -2403,21 +2228,6 @@
    ADDED SYSTEM CUSTOM STYLES FOR QUIZENGINE & ABILITYTESTPAGE (OPTION 1)
    ========================================================================== */
 
- /* --- Layout & Komponen Umum --- */
- .qz-header-row {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   margin-bottom: 12px;
- }
-
- .qz-difficulty-badge {
-   font-size: 12px;
-   background: #e2e8f0;
-   padding: 4px 8px;
-   border-radius: 4px;
-   font-weight: bold;
- }
 
  .qz-review-mode-warning {
    font-style: italic;
@@ -2602,11 +2412,6 @@
    margin-bottom: 20px;
  }
 
- .at-error-progress-text {
-   margin-top: 12px;
-   font-size: 13px;
-   color: #e74c3c;
- }
 
  /* --- Modal Struktur AbilityTestPage --- */
  .at-modal-overlay {
@@ -2666,6 +2471,23 @@
    font-size: 14px;
    color: #7f8c8d;
    margin-bottom: 20px;
+ }
+
+ .at-modal-submit-btn-black {
+   width: 100%;
+   height: 48px;
+   border: none;
+   border-radius: 10px;
+   background: #2b2b2b;
+   color: #ffffff;
+   font-size: 15px;
+   font-weight: bold;
+   cursor: pointer;
+   transition: background 0.2s ease;
+ }
+
+ .at-modal-submit-btn-black:hover {
+   background: #3a3a3a;
  }
 
  .at-modal-submit-btn {
@@ -3018,5 +2840,695 @@
    .up-file-name {
      font-size: 14px;
      line-height: 1.4;
+   }
+ }
+
+ /* ==========================================================================
+   SMART.AQG - FULL CSS SPECIFICATION FOR TEST KEMAMPUAN AWAL
+   ========================================================================== */
+
+ /* 1. Halaman Pembungkus Utama (Page Wrapper) */
+ .at-page-wrapper {
+   min-height: 100vh;
+   background: #f8fafc;
+   /* Menggunakan warna bg-light bawaan */
+ }
+
+ /* 2. Container Konten Utama (Flex Direction: Column) */
+ .at-content-container {
+   max-width: 1250px;
+   margin: 0 auto;
+   padding: 40px 20px;
+   display: flex;
+   flex-direction: column;
+   gap: 25px;
+ }
+
+ /* ==========================================================================
+   BARIS ATAS: AREA KONTEKS BACAAN (FULL WIDTH)
+   ========================================================================== */
+
+ .at-context-card {
+   background: #ffffff;
+   padding: 30px;
+   border-radius: 15px;
+   border: 1px solid #e2e8f0;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+   width: 100%;
+   max-width: 100%;
+   margin: 0;
+ }
+
+ .at-header-row {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 12px;
+ }
+
+ .at-context-title {
+   font-size: 24px;
+   font-weight: 700;
+   color: #1e293b;
+ }
+
+ .at-difficulty-badge {
+   font-size: 12px;
+   background: #e2e8f0;
+   padding: 4px 8px;
+   border-radius: 4px;
+   font-weight: bold;
+ }
+
+ /* Kotak Teks Bacaan dengan Scrollbar */
+ .at-reading-box {
+   background: #f8f9fa;
+   padding: 16px;
+   border-radius: 8px;
+   border-left: 4px solid #3b82f6;
+ }
+
+ .at-context-body-scroll {
+   max-height: 300px;
+   /* Sesuai batasan tinggi inline style terbaru */
+   overflow-y: auto;
+   /* Munculkan scrollbar secara otomatis */
+   padding-right: 10px;
+ }
+
+ /* ==========================================================================
+   BARIS BAWAH: LAYOUT DUA KOLOM (PERTANYAAN SOAL & SIDEBAR NOMOR)
+   ========================================================================== */
+
+ /* Pembungkus Baris Bawah agar Sejajar Kiri-Kanan */
+ .at-bottom-layout-wrapper {
+   display: flex;
+   gap: 30px;
+   /* Jarak antara kolom kiri dan kolom kanan */
+   align-items: flex-start;
+   /* Menahan agar sidebar tidak ikut memanjang ke bawah */
+   width: 100%;
+ }
+
+ /* --- KOLOM KIRI: AREA PERTANYAAN SOAL --- */
+ .at-question-section {
+   flex: 1;
+   /* Mengambil semua sisa ruang kosong di sisi kiri */
+   background: #ffffff;
+   padding: 30px;
+   border-radius: 15px;
+   border: 1px solid #e2e8f0;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+   margin: 0;
+   width: 100%;
+ }
+
+ .at-question-text {
+   font-size: 15px;
+   color: #334155;
+   line-height: 1.7;
+ }
+
+ .at-question-text-bold {
+   font-weight: 600;
+   margin-bottom: 20px;
+ }
+
+ /* List Pilihan Ganda */
+ .at-options-list {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+ }
+
+ .at-option-item {
+   display: flex;
+   align-items: center;
+   padding: 12px;
+   border-radius: 10px;
+   cursor: pointer;
+   transition: background 0.2s;
+ }
+
+ .at-option-item:hover {
+   background: #f1f5f9;
+ }
+
+ /* Sembunyikan radio bawaan browser agar lingkaran kustom bekerja */
+ .at-option-item input[type="radio"] {
+   position: absolute;
+   opacity: 0;
+   width: 0;
+   height: 0;
+   pointer-events: none;
+ }
+
+ /* Lingkaran Radio Kustom */
+ .at-radio-circle {
+   width: 20px;
+   height: 20px;
+   margin-right: 12px;
+   border-radius: 50%;
+   border: 2px solid #cbd5e1;
+   background: #ffffff;
+   position: relative;
+   flex-shrink: 0;
+   transition: all 0.2s ease;
+ }
+
+ /* Style Lingkaran ketika Pilihan Aktif */
+ .at-option-item.active .at-radio-circle {
+   border-color: #3b82f6;
+   background: #ffffff;
+ }
+
+ .at-option-item.active .at-radio-circle::after {
+   content: "";
+   position: absolute;
+   width: 10px;
+   height: 10px;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   border-radius: 50%;
+   background: #3b82f6;
+ }
+
+ .at-option-label {
+   font-size: 15px;
+   color: #334155;
+ }
+
+ /* --- KOLOM KANAN: SIDEBAR NAVIGASI NOMOR --- */
+ .at-sidebar-layout-vertical {
+   width: 320px;
+   /* Lebar tetap untuk kolom kanan */
+   flex-shrink: 0;
+   /* Mencegah sidebar menyusut */
+ }
+
+ .at-sidebar-sticky-wrapper {
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+ }
+
+ /* Card Grid Nomor */
+ .at-numbers-card {
+   background: #ffffff;
+   padding: 25px;
+   border-radius: 10px;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+   border: 1px solid #e2e8f0;
+ }
+
+ .at-number-grid {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   /* Membagi menjadi 4 kolom nomor */
+   gap: 12px;
+ }
+
+ .at-number-item {
+   aspect-ratio: 1;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border-radius: 6px;
+   font-weight: 700;
+   cursor: pointer;
+   transition: all 0.2s ease;
+ }
+
+ .at-num-item-flex {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
+
+ /* Status Kotak Nomor */
+ .at-number-item.num-default {
+   background-color: #ffffff;
+   color: #1e293b;
+   border: 1px solid #e2e8f0;
+ }
+
+ .at-number-item.num-answered {
+   background-color: #9ca3af;
+   /* Abu-abu jika sudah dijawab */
+   color: #ffffff;
+   border: none;
+ }
+
+ .at-number-item.num-current {
+   background-color: #3b82f6;
+   /* Biru jika sedang aktif dilihat */
+   color: #ffffff;
+   border: none;
+ }
+
+ /* Navigasi Tombol */
+ .at-sidebar-nav-container {
+   display: flex;
+   flex-direction: column;
+ }
+
+ .at-btn-flex-row {
+   display: flex;
+   gap: 8px;
+ }
+
+ .at-nav-btn {
+   flex: 1;
+   padding: 12px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 8px;
+   border-radius: 8px;
+   font-weight: 600;
+   transition: all 0.2s ease;
+ }
+
+ .at-nav-btn-text {
+   font-weight: 600;
+   font-size: 14px;
+ }
+
+ /* Status Aktif/Mati Tombol */
+ .at-nav-btn.prev.btn-prev-disabled {
+   background-color: #f8f9fa;
+   color: #cbd5e1;
+   border: 1px solid #e2e8f0;
+   cursor: not-allowed;
+ }
+
+ .at-nav-btn.prev.btn-prev-active {
+   background-color: #ffffff;
+   color: #1e293b;
+   border: 1px solid #cbd5e1;
+   cursor: pointer;
+ }
+
+ .at-nav-btn.next.btn-next-disabled {
+   background-color: #9ca3af;
+   color: #ffffff;
+   cursor: not-allowed;
+   border: none;
+ }
+
+ .at-nav-btn.next.btn-next-active {
+   background-color: #111827;
+   color: #ffffff;
+   cursor: pointer;
+   border: none;
+ }
+
+ .at-error-progress-text {
+   margin-top: 12px;
+   font-size: 13px;
+   color: #e74c3c;
+ }
+
+ /* ==========================================================================
+   RESPONSIVE LAYOUT (MEDIA QUERIES UNTUK TABLET & HP)
+   ========================================================================== */
+
+ @media (max-width: 768px) {
+   .at-bottom-layout-wrapper {
+     flex-direction: column;
+     /* Menumpuk atas-bawah otomatis pada layar tablet/HP */
+     gap: 20px;
+   }
+
+   .at-sidebar-layout-vertical {
+     width: 100%;
+     /* Lebar sidebar memanjang penuh */
+   }
+ }
+
+
+ /* ==========================================================================
+   SMART.AQG - EXCLUSIVE CSS FOR QUIZ PAGE (MATCHING ABILITY TEST)
+   ========================================================================== */
+
+ .qz-page-wrapper {
+   min-height: 100vh;
+   background: #f8fafc;
+   padding-top: 40px;
+ }
+
+ .qz-content-container {
+   max-width: 1250px;
+   margin: 0 auto;
+   padding: 40px 20px;
+   display: flex;
+   flex-direction: column;
+   gap: 25px;
+ }
+
+ /* BARIS ATAS: KARTU KONTEKS BACAAN (FULL WIDTH) */
+ .qz-context-card {
+   background: white;
+   padding: 30px;
+   border-radius: 15px;
+   border: 1px solid #e2e8f0;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+   width: 100%;
+   max-width: 100%;
+   margin: 0;
+ }
+
+ .qz-header-row {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 12px;
+ }
+
+ .qz-context-title {
+   font-size: 24px;
+   font-weight: 700;
+   color: #1e293b;
+ }
+
+ .qz-difficulty-badge {
+   font-size: 12px;
+   background: #e2e8f0;
+   padding: 4px 8px;
+   border-radius: 4px;
+   font-weight: bold;
+ }
+
+ .qz-review-mode-warning {
+   font-style: italic;
+   color: #ef4444;
+   font-size: 13px;
+   margin-bottom: 12px;
+   font-weight: 600;
+ }
+
+ .qz-adaptive-mode-info {
+   font-style: italic;
+   color: #64748b;
+   font-size: 13px;
+   margin-bottom: 12px;
+ }
+
+ .qz-reading-box {
+   background: #f8f9fa;
+   padding: 16px;
+   border-radius: 8px;
+   border-left: 4px solid #3b82f6;
+   max-height: 300px;
+   overflow-y: auto;
+   padding-right: 10px;
+ }
+
+ .qz-reading-box p {
+   line-height: 1.6;
+   text-align: justify;
+   font-size: 16px;
+   color: #334155;
+   margin: 0 0 12px 0;
+ }
+
+ .qz-reading-box p:last-child {
+   margin-bottom: 0;
+ }
+
+ /* BARIS BAWAH: LAYOUT DUA KOLOM (SOAL & SIDEBAR SEJAJAR KIRI-KANAN) */
+ .qz-bottom-layout-wrapper {
+   display: flex;
+   gap: 30px;
+   align-items: flex-start;
+   width: 100%;
+ }
+
+ /* KOLOM KIRI: AREA PERTANYAAN SOAL */
+ .qz-question-section {
+   flex: 1;
+   background: white;
+   padding: 30px;
+   border-radius: 15px;
+   border: 1px solid #e2e8f0;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+   margin: 0;
+   width: 100%;
+ }
+
+ .qz-question-text {
+   font-size: 15px;
+   color: #334155;
+   line-height: 1.7;
+   font-weight: 600;
+   margin-bottom: 20px;
+ }
+
+ /* List Pilihan Ganda & Kustom Radio */
+ .qz-options-list {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+ }
+
+ .qz-option-item {
+   display: flex;
+   align-items: center;
+   padding: 12px;
+   border-radius: 10px;
+   cursor: pointer;
+   transition: background 0.2s;
+   border: 1px solid transparent;
+ }
+
+ .qz-option-item:hover {
+   background: #f1f5f9;
+ }
+
+ .qz-option-item.active {
+   background: #ffffff;
+ }
+
+ .qz-option-item input[type="radio"] {
+   position: absolute;
+   opacity: 0;
+   width: 0;
+   height: 0;
+   pointer-events: none;
+ }
+
+ .qz-radio-circle {
+   width: 20px;
+   height: 20px;
+   margin-right: 12px;
+   border-radius: 50%;
+   border: 2px solid #cbd5e1;
+   background: #ffffff;
+   position: relative;
+   flex-shrink: 0;
+   transition: all 0.2s ease;
+ }
+
+ .qz-option-item.active .qz-radio-circle {
+   border-color: #3b82f6;
+   background: #ffffff;
+ }
+
+ .qz-option-item.active .qz-radio-circle::after {
+   content: "";
+   position: absolute;
+   width: 10px;
+   height: 10px;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   border-radius: 50%;
+   background: #3b82f6;
+ }
+
+ .qz-option-label {
+   font-size: 15px;
+   color: #334155;
+ }
+
+ /* KOLOM KANAN: SIDEBAR VERTIKAL */
+ .qz-sidebar-layout-vertical {
+   width: 320px;
+   flex-shrink: 0;
+ }
+
+ .qz-sidebar-right {
+   display: flex;
+   flex-direction: column;
+ }
+
+ .qz-numbers-card {
+   background: white;
+   padding: 25px;
+   border-radius: 10px;
+   border: 1px solid #e2e8f0;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+   max-height: 240px;
+   overflow-y: auto;
+   padding-right: 12px;
+ }
+
+ .qz-numbers-card::-webkit-scrollbar {
+   width: 6px;
+ }
+
+ .qz-numbers-card::-webkit-scrollbar-track {
+   background: #f1f5f9;
+   border-radius: 4px;
+ }
+
+ .qz-numbers-card::-webkit-scrollbar-thumb {
+   background: #cbd5e1;
+   border-radius: 4px;
+ }
+
+ .qz-numbers-card::-webkit-scrollbar-thumb:hover {
+   background: #94a3b8;
+ }
+
+ .qz-number-grid {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   gap: 12px;
+ }
+
+ .qz-number-item {
+   aspect-ratio: 1;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border-radius: 6px;
+   font-weight: 700;
+   cursor: pointer;
+   transition: all 0.2s ease;
+ }
+
+ .qz-num-item-flex {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
+
+ .qz-number-item.num-default {
+   background-color: #ffffff;
+   color: #1e293b;
+   border: 1px solid #e2e8f0;
+ }
+
+ .qz-number-item.num-answered {
+   background-color: #9ca3af;
+   color: #ffffff;
+   border: none;
+ }
+
+ .qz-number-item.num-current {
+   background-color: #3b82f6;
+   color: #ffffff;
+   border: none;
+ }
+
+ .qz-sidebar-bottom-actions {
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+ }
+
+ .qz-sidebar-nav-btn-container {
+   display: flex;
+   gap: 8px;
+ }
+
+ .qz-nav-btn {
+   flex: 1;
+   padding: 12px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 8px;
+   border-radius: 8px;
+   font-weight: 600;
+   transition: all 0.2s ease;
+ }
+
+ .qz-nav-btn-text {
+   font-weight: 600;
+   font-size: 14px;
+ }
+
+ .qz-nav-btn.prev.btn-prev-disabled {
+   background-color: #f8f9fa;
+   color: #cbd5e1;
+   border: 1px solid #e2e8f0;
+   cursor: not-allowed;
+ }
+
+ .qz-nav-btn.prev.btn-prev-active {
+   background-color: #ffffff;
+   color: #1e293b;
+   border: 1px solid #cbd5e1;
+   cursor: pointer;
+ }
+
+ .qz-nav-btn.next.btn-next-disabled {
+   background-color: #9ca3af;
+   color: #ffffff;
+   cursor: not-allowed;
+   border: none;
+ }
+
+ .qz-nav-btn.next.btn-next-active {
+   background-color: #111827;
+   color: #ffffff;
+   cursor: pointer;
+ }
+
+ .qz-btn-submit-action {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 8px;
+   width: 100%;
+   padding: 12px;
+   color: white;
+   border-radius: 8px;
+   font-weight: 600;
+   border: none;
+   transition: background-color 0.2s;
+ }
+
+ .qz-btn-submit-action.btn-end-disabled {
+   background-color: #9ca3af;
+   cursor: not-allowed;
+ }
+
+ .qz-btn-submit-action.btn-end-active {
+   background-color: #ef4444;
+   cursor: pointer;
+   box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
+ }
+
+ .qz-btn-submit-action.btn-end-active:hover {
+   background-color: #dc2626;
+ }
+
+ .qz-freeze-opacity {
+   opacity: 0.6;
+ }
+
+ /* RESPONSIVE LAYOUT UNTUK TABLET / SMARTPHONE */
+ @media (max-width: 768px) {
+   .qz-bottom-layout-wrapper {
+     flex-direction: column;
+     gap: 20px;
+   }
+
+   .qz-sidebar-layout-vertical {
+     width: 100%;
    }
  }

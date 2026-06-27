@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Menu, ChevronRight, ChevronLeft, CheckSquare } from "lucide-react";
+import { ChevronRight, ChevronLeft, CheckSquare } from "lucide-react";
 import LogoutOverlay from "../components/LogoutOverlay";
 import { submitSessionAnswer, fetchNextQuestion } from "../../utils/api";
 
@@ -8,6 +8,7 @@ const QuizEngine = ({ type = "quiz" }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const initData = location.state?.quizData;
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sessionId] = useState(initData?.session_id);
   const [documentId] = useState(initData?.document_id);
@@ -19,6 +20,9 @@ const QuizEngine = ({ type = "quiz" }) => {
   const [isEnding, setIsEnding] = useState(false);
   const [selectedFlags, setSelectedFlags] = useState({});
   const isBackNavigationHandled = useRef(false);
+
+  const readingContextRef = useRef(null);
+  const readingBoxRef = useRef(null);
 
   const questionNumbers = Array.from(
     { length: questionsList.length },
@@ -33,7 +37,6 @@ const QuizEngine = ({ type = "quiz" }) => {
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
-
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
@@ -79,6 +82,18 @@ const QuizEngine = ({ type = "quiz" }) => {
     };
   }, [selectedFlags, selectedOption, answersHistory]);
 
+  const scrollToContext = () => {
+    if (readingContextRef.current) {
+      readingContextRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+    if (readingBoxRef.current) {
+      readingBoxRef.current.scrollTop = 0;
+    }
+  };
+
   const isPastQuestion = () => currentQuestion < questionsList.length;
 
   if (questionsList.length === 0)
@@ -117,11 +132,13 @@ const QuizEngine = ({ type = "quiz" }) => {
   const handlePrev = () => {
     if (isEnding) return;
     setCurrentQuestion((prev) => Math.max(1, prev - 1));
+    scrollToContext();
   };
 
   const handleNext = async () => {
     if (isPastQuestion()) {
       setCurrentQuestion((prev) => prev + 1);
+      scrollToContext();
       return;
     }
 
@@ -156,6 +173,7 @@ const QuizEngine = ({ type = "quiz" }) => {
       setQuestionsList((prev) => [...prev, nextQResponse.data]);
       setCurrentQuestion((prev) => prev + 1);
       setSelectedOption(null);
+      scrollToContext();
     } catch (error) {
       alert("Failed to process question: " + error.message);
     } finally {
@@ -223,7 +241,7 @@ const QuizEngine = ({ type = "quiz" }) => {
       navigate(`/sessions/${sessionId}/summary`);
       
     } catch (error) {
-      alert("Failed to save answers:: " + error.message);
+      alert("Failed to save answers: " + error.message);
       setIsEnding(false);
     }
   };
@@ -231,40 +249,48 @@ const QuizEngine = ({ type = "quiz" }) => {
   return (
     <div className="qz-page-wrapper">
       <div className="qz-content-container">
-        <div className="qz-main-content">
-          <article className="qz-context-card">
-            {type === "ability-test" && (
-              <div className="qz-card-number">{currentQuestion}</div>
+        
+        <article ref={readingContextRef} className="qz-context-card">
+          <div className="qz-header-row">
+            <h2 className="qz-context-title" style={{ margin: 0 }}>
+              Reading Context
+            </h2>
+            <span className="qz-difficulty-badge">
+              Level: {currentQuestionData.difficulty_level?.toUpperCase()}
+            </span>
+            
+          </div>
+
+          <div className="qz-context-body">
+            {isPastQuestion() ? (
+              <p className="qz-review-mode-warning">
+                *Review Mode: You are currently viewing a previous question. Your answer is permanently locked.
+              </p>
+            ) : (
+              <p className="qz-adaptive-mode-info">
+                *Adaptive System: AI continuously adjusts the difficulty level. You can end the session at any time.
+              </p>
             )}
 
-            <div className="qz-header-row">
-              <h2 className="qz-context-title" style={{ margin: 0 }}>
-                Reading Context
-              </h2>
-              <span className="qz-difficulty-badge">
-                Level: {currentQuestionData.difficulty_level?.toUpperCase()}
-              </span>
-            </div>
-
-            <div className="qz-context-body">
-              {isPastQuestion() ? (
-                <p className="qz-review-mode-warning">
-                  *Review Mode: You are currently viewing a previous question. Your answer is permanently locked.
-                </p>
+            <div ref={readingBoxRef} className="qz-reading-box">
+              {currentQuestionData.reading_context ? (
+                currentQuestionData.reading_context.split("\n").map((paragraph, index) => {
+                  if (paragraph.trim() === "") return null;
+                  return (
+                    <p key={index}>
+                      {paragraph}
+                    </p>
+                  );
+                })
               ) : (
-                <p className="qz-adaptive-mode-info">
-                  *Adaptive System: AI continuously adjusts the difficulty level. You can end the session at any time.
-                </p>
+                <p>No reading text available.</p>
               )}
-
-              <div className="qz-reading-box">
-                <p>
-                  {currentQuestionData.reading_context || "No reading text available."}
-                </p>
-              </div>
             </div>
-          </article>
+          </div>
+        </article>
 
+        <div className="qz-bottom-layout-wrapper">
+          
           <section className="qz-question-section">
             <p className="qz-question-text">
               {currentQuestionData.question_text}
@@ -296,77 +322,83 @@ const QuizEngine = ({ type = "quiz" }) => {
               })}
             </div>
           </section>
-        </div>
 
-        <aside className="qz-sidebar-layout-vertical">
-              <div className="qz-sidebar-right">
-                <div className="qz-numbers-card">
-                  <div className="qz-number-grid">
-                    {questionNumbers.map((num) => {
-                      const isAnswered = isQuestionAnswered(num);
-                      const isCurrent = num === currentQuestion;
+          <aside className="qz-sidebar-layout-vertical">
+            <div className="qz-sidebar-right">
+              <div className="qz-numbers-card">
+                <div className="qz-number-grid">
+                  {questionNumbers.map((num) => {
+                    const isAnswered = isQuestionAnswered(num);
+                    const isCurrent = num === currentQuestion;
 
-                      let numberStatusClass = "num-default";
-                      if (isAnswered) numberStatusClass = "num-answered";
-                      else if (isCurrent) numberStatusClass = "num-current";
+                    let numberStatusClass = "num-default";
+                    if (isAnswered) numberStatusClass = "num-answered";
+                    else if (isCurrent) numberStatusClass = "num-current";
 
-                      return (
-                        <div
-                          key={num}
-                          className={`qz-number-item qz-num-item-flex ${numberStatusClass} ${isEnding ? "qz-freeze-opacity" : ""}`}
-                          onClick={() => !isEnding && setCurrentQuestion(num)}
-                        >
-                          {num}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="qz-sidebar-bottom-actions">
-                  <div className="qz-sidebar-nav-btn-container">
-                    <button
-                      className={`qz-nav-btn prev ${
-                        currentQuestion === 1 || isLoading || isEnding 
-                          ? "btn-prev-disabled" 
-                          : "btn-prev-active"
-                      }`}
-                      disabled={currentQuestion === 1 || isLoading || isEnding}
-                      onClick={handlePrev}
-                    >
-                      <ChevronLeft size={18} />
-                      <span className="qz-nav-btn-text">Previously</span>
-                    </button>
-
-                    <button
-                      className={`qz-nav-btn next ${
-                        selectedOption === null || isLoading || isEnding 
-                          ? "btn-next-disabled" 
-                          : "btn-next-active"
-                      }`}
-                      onClick={handleNext}
-                      disabled={selectedOption === null || isLoading || isEnding}
-                    >
-                      <span className="qz-nav-btn-text">{isLoading ? "Processing..." : "Next"}</span>
-                      {!isLoading && <ChevronRight size={18} />}
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={handleEndSession}
-                    disabled={isEnding}
-                    className={`qz-btn-submit-action ${
-                      isEnding ? "btn-end-disabled" : "btn-end-active"
-                    }`}
-                  >
-                    <CheckSquare size={18} />
-                    <span>{isEnding ? "Saving Answers..." : "End Practice Session"}</span>
-                  </button>
+                    return (
+                      <div
+                        key={num}
+                        className={`qz-number-item qz-num-item-flex ${numberStatusClass} ${isEnding ? "qz-freeze-opacity" : ""}`}
+                        onClick={() => {
+                          if (!isEnding) {
+                            setCurrentQuestion(num);
+                            scrollToContext();
+                          }
+                        }}
+                      >
+                        {num}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-        </aside>
-      </div>
 
+              <div className="qz-sidebar-bottom-actions">
+                <div className="qz-sidebar-nav-btn-container">
+                  <button
+                    className={`qz-nav-btn prev ${
+                      currentQuestion === 1 || isLoading || isEnding 
+                        ? "btn-prev-disabled" 
+                        : "btn-prev-active"
+                    }`}
+                    disabled={currentQuestion === 1 || isLoading || isEnding}
+                    onClick={handlePrev}
+                  >
+                    <ChevronLeft size={18} />
+                    <span className="qz-nav-btn-text">Previously</span>
+                  </button>
+
+                  <button
+                    className={`qz-nav-btn next ${
+                      selectedOption === null || isLoading || isEnding 
+                        ? "btn-next-disabled" 
+                        : "btn-next-active"
+                    }`}
+                    onClick={handleNext}
+                    disabled={selectedOption === null || isLoading || isEnding}
+                  >
+                    <span className="qz-nav-btn-text">{isLoading ? "Processing..." : "Next"}</span>
+                    {!isLoading && <ChevronRight size={18} />}
+                  </button>
+                </div>
+
+                <button
+                  onClick={handleEndSession}
+                  disabled={isEnding}
+                  className={`qz-btn-submit-action ${
+                    isEnding ? "btn-end-disabled" : "btn-end-active"
+                  }`}
+                >
+                  <CheckSquare size={18} />
+                  <span>{isEnding ? "Saving Answers..." : "End Practice Session"}</span>
+                </button>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+
+      </div>
       <LogoutOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>
   );
