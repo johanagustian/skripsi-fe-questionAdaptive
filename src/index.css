@@ -3234,7 +3234,8 @@
 .qz-current-score,
 .at-current-ability,
 .rv-current-score,
-.rv-current-theta {
+.rv-current-theta,
+.rv-current-ability {
   font-weight: 600;
   color: #334155;
   white-space: nowrap;

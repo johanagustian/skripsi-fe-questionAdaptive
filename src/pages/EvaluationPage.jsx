@@ -191,6 +191,9 @@ const EvaluationPage = () => {
           <div className="hp-section-title">
             <h2>Performance Chart</h2>
             <p>
+              Initial theta score: <strong>{summaryData.initial_theta}</strong>
+            </p>
+            <p>
               Ability Change:{" "}
               <strong
                 style={{
