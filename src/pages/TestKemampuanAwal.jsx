@@ -98,7 +98,7 @@ const AbilityTestPage = () => {
             </h2>
             <div className="at-context-info">
               <span className="at-current-ability">
-                Ability (<i>b</i>) : {currentQuiz.b_parameter}
+                difficulty (<i>b</i>) : {currentQuiz.b_parameter}
               </span>
               <span className={`at-difficulty-badge ${currentQuiz.difficulty.toLowerCase()}`}>
                 Level : {currentQuiz.difficulty.toUpperCase()}

@@ -274,7 +274,7 @@ const QuizEngine = ({ type = "quiz" }) => {
                 Theta (<i>θ</i>) : {Number(currentQuestionData.current_theta).toFixed(2)}
               </span>
               <span className="qz-current-ability">
-                Ability (<i>b</i>) : {currentQuestionData.b_parameter}
+                difficulty (<i>b</i>) : {currentQuestionData.b_parameter}
               </span>
               <span className={`qz-difficulty-badge ${currentQuestionData.difficulty_level?.toLowerCase()}`}>
                 Level: {currentQuestionData.difficulty_level?.toUpperCase()} 

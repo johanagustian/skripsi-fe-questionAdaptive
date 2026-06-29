@@ -69,7 +69,7 @@ const ReviewPage = () => {
                 Theta Score (<i>θ</i>) : {Number(currentQuiz.theta_before).toFixed(2)}
               </span>
               <span className="rv-current-ability">
-                Ability (<i>b</i>) : {currentQuiz.difficulty_level?.toLowerCase() === "middle" ? -0.5 : +0.5 }
+                difficulty (<i>b</i>) : {currentQuiz.difficulty_level?.toLowerCase() === "middle" ? -0.5 : +0.5 }
               </span>
               <span
                 className={`rv-difficulty-badge ${currentQuiz.difficulty_level?.toLowerCase()}`}
