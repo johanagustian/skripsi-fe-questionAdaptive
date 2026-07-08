@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from 'lucide-react';
 import logoIcon from "../assets/boy2.jpg";
 import { login, checkUserStatus, startAbilityTest } from "../../utils/api";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [showPass, setShowPass] = useState(false);
 
   const [showGuideModal, setShowGuideModal] = useState(false);
   const [isGeneratingSoal, setIsGeneratingSoal] = useState(false);
@@ -108,18 +110,23 @@ const LoginPage = () => {
 
               <div className="input-group">
                 <label>Enter Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Enter Password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
+                <div className="password-wrapper">
+                  <input
+                    type={showPass ? 'text' : 'password'} 
+                    name="password"
+                    placeholder="Enter Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  <button type="button" className="password-toggle" onClick={() => setShowPass(!showPass)}>
+                    {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
               </div>
 
               <button type="submit" className="btn-login-black">
-                Masuk
+                Login
               </button>
             </form>
 

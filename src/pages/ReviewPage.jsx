@@ -56,7 +56,7 @@ const ReviewPage = () => {
   };
 
   return (
-    <div className="hp-wrapper">
+    <div className="rv-wrapper">
       <main className="at-content-container">
         <div
           ref={readingContextRef}
@@ -171,7 +171,7 @@ const ReviewPage = () => {
                       name={`review-question-${currentNum}`}
                       checked={isUserChoice}
                       readOnly
-                    />
+                    />  
                     <div className={`rv-dot ${isUserChoice ? "active" : ""}`} />
                     <span
                       style={{
